@@ -1,10 +1,11 @@
 var FermopointStorePickup = Class.create();
 FermopointStorePickup.prototype = {
 
-    initialize: function(changeMethodUrl, searchUrl, mediaUrl) {
+    initialize: function(changeMethodUrl, searchUrl, mediaUrl, infoCallback) {
         this.changeMethodUrl = changeMethodUrl;
         this.searchUrl = searchUrl;
         this.mediaUrl = mediaUrl;
+        this.infoCallback = infoCallback;
         
         this.error = false;
 		this.points = [];
@@ -180,21 +181,24 @@ FermopointStorePickup.prototype = {
     
     showPointInfo: function (marker, idx) {
         var point = this.points[idx], 
-            days = [];
+            days = [],
+            content;
         for (var i = 0; i < point.hours.length; i++) {
             days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
         }
-        this.infoWindow.setContent(
-            '<div class="fermopoint-info-window">' +
+        if (typeof this.infoCallback === 'function')
+            content = this.infoCallback(point, idx);
+        else
+            content = '<div class="fermopoint-info-window">' +
             '<div class="fermopoint-info-row title">' + point.name + '</div>' +
             '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + idx + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
             '<div class="fermopoint-info-row"></div>' +
             '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
             '<div class="fermopoint-info-row contact"><strong>' + Translator.translate('Contact') + ': </strong>' + point.contact + '</div>'+
             '<div class="fermopoint-info-row category"><strong>' + Translator.translate('Category') + ': </strong>' + point.category + '</div>'+
-            '<div class="fermopoint-info-row hours"><!--strong>' + Translator.translate('Hours') + ': </strong--><div class="hours-list">' + days.join('<br />') + '</div></div>'
-           
-        );
+            '<div class="fermopoint-info-row hours"><!--strong>' + Translator.translate('Hours') + ': </strong--><div class="hours-list">' + days.join('<br />') + '</div></div></div>'
+        ;
+        this.infoWindow.setContent(content);
         this.infoWindow.open(this.map, marker);  
     },
 	

@@ -67,7 +67,7 @@ class FermoPoint_StorePickup_Model_Api {
         $client->setHeaders(array('Accept-Encoding: identity'));
         $client->setConfig(array('strictredirects' => true));
         $client->setRawData(json_encode($signedData), 'application/json');
-
+        
         try {
             $response = $client->request(Zend_Http_Client::POST);
         } catch (Zend_Http_Client_Exception $e) {
@@ -75,7 +75,6 @@ class FermoPoint_StorePickup_Model_Api {
             throw new FermoPoint_StorePickup_Exception(Mage::helper('fpstorepickup')->__('Could not communicate with server'));
         }
         $body = $response->getBody();
-        
         $json = json_decode($body, true);
         if ($json === null)
         {

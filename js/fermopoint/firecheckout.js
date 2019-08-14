@@ -17,6 +17,12 @@
             var result = oldResponseHandler.apply(this, arguments);
             try {
                 fpStorePickup.forceMapUpdate();
+                setTimeout(function () {
+                    fpStorePickup.forceMapUpdate();
+                }, 1);
+                setTimeout(function () {
+                    fpStorePickup.forceMapUpdate();
+                }, 100);
             } catch (e) {
             }
             return result;
