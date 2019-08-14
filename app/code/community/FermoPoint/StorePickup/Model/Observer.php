@@ -19,6 +19,8 @@ class FermoPoint_StorePickup_Model_Observer
         $controller->setFlag('', Mage_Core_Controller_Varien_Action::FLAG_NO_DISPATCH, true);
     }
     
+    
+    
     public function onSaveShippingMethodBefore($observer)
     {
         $controller = $observer->getEvent()->getControllerAction();
@@ -34,16 +36,50 @@ class FermoPoint_StorePickup_Model_Observer
         if ( ! $point->getId())
             return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Unknown Fermo!Point ID'));
         
-        $nickname = trim($request->getPost('fermopoint_nickname', ''));
-        if (empty($nickname))
-            return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Nickname'));
+        $accountType = $request->getPost('fermopoint_account', 'new');
+        $config = Mage::helper('fpstorepickup/config');
+        if ($accountType == 'guest' && $config->getGuestEnabled())
+        {
+            $isGuest = true;
+            $accountType = 'existing';
+            $request->setPost('fermopoint_account', $accountType);
+            $nickname = $config->getGuestNickname();
+            $request->setPost('fermopoint_nickname', $nickname);
+            $dob = $config->getGuestDob();
+            $request->setPost('fermopoint_dob', $dob);
+        }
+        else
+        {
+            $isGuest = false;
+            $nickname = trim($request->getPost('fermopoint_nickname', ''));
+            if (empty($nickname))
+                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Nickname'));
+            
+            $dob = trim($request->getPost('fermopoint_dob', ''));
+            if (empty($dob))
+                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
+            
+            $dob = Mage::helper('fpstorepickup')->convertDate($dob);
+            if (empty($dob))
+                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
         
-        $api = Mage::getModel('fpstorepickup/api');
-        switch ($accountType = $request->getPost('fermopoint_account', 'new'))
+            $request->setPost('fermopoint_dob', $dob);
+        }
+        
+        $api = Mage::getSingleton('fpstorepickup/api');
+        switch ($accountType)
         {
             case 'existing':
-                if ($api->isNicknameAvailable($nickname))
-                    return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('There is no user with this nickname'));
+                if ($isGuest)
+                {
+                    if ( ! $api->isGuestNicknameAndDobMatch($nickname, $dob))
+                        return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
+                }
+                else
+                {
+                    if ( ! $api->isNicknameAndDobMatch($nickname, $dob))
+                        return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
+                }
                 break;
             
             case 'new':
@@ -76,6 +112,7 @@ class FermoPoint_StorePickup_Model_Observer
         Mage::helper('fpstorepickup')->setNickname(trim($request->getPost('fermopoint_nickname')));
         Mage::helper('fpstorepickup')->setAccountType(trim($request->getPost('fermopoint_account')));
         Mage::helper('fpstorepickup')->setPhoneNumber(trim($request->getPost('fermopoint_phone')));
+        Mage::helper('fpstorepickup')->setDob(trim($request->getPost('fermopoint_dob')));
         
         $point = Mage::getSingleton('fpstorepickup/points')->getPoint($pointId);
         if ($point->getId()) 
@@ -113,6 +150,7 @@ class FermoPoint_StorePickup_Model_Observer
             'account_type' => Mage::helper('fpstorepickup')->getAccountType(),
             'nickname' => Mage::helper('fpstorepickup')->getNickname(),
             'phone_number' => Mage::helper('fpstorepickup')->getPhoneNumber(),
+            'dob' => Mage::helper('fpstorepickup')->getDob(),
             'email' => $order->getCustomerEmail(),
         );
         $point = Mage::getSingleton('fpstorepickup/points')->getPoint($pointId);
@@ -290,6 +328,25 @@ class FermoPoint_StorePickup_Model_Observer
             ->setIsCancelled(true)
             ->save()
         ;
+    }
+    
+    public function onSystemConfigSaveAfter($observer)
+    {
+        $section = $observer->getEvent()->getSection();
+        if ($section != 'carriers')
+            return;
+        
+        $config = Mage::helper('fpstorepickup/config');
+        if ( ! $config->getGuestEnabled())
+            return;
+        
+        $api = Mage::getSingleton('fpstorepickup/api');
+        if ($api->isGuestNicknameAndDobMatch($config->getGuestNickname(), $config->getGuestDob()))
+            return;
+        
+        $session = Mage::getSingleton('adminhtml/session');
+        $session->addError(Mage::helper('fpstorepickup')->__('Nickname and date of birth do not match!'));
+        $config->resetGuestEnabled();
     }
 
 }

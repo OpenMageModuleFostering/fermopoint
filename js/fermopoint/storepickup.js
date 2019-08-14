@@ -22,6 +22,101 @@ FermopointStorePickup.prototype = {
         this.setUpHook();
     },
     
+    clearValidations: function (input) {
+    },
+    
+    onAccountTypeChange: function (event, target) {
+        if (this.nickname.value.length)
+            Validation.validate(this.nickname);
+        if (this.dob.value.length)
+            Validation.validate(this.dob);
+    },
+    
+    onNicknameChange: function (event, target) {
+        Validation.validate(this.nickname);
+        if (this.dob.value.length)
+            Validation.validate(this.dob);
+    },
+    
+    onDobChange: function (event, target) {
+        Validation.validate(this.dob);
+    },
+    
+    validateNickname: function (v) {
+        var result,
+            self = this;
+        if ( ! v.length || ! this.newAccount.checked)
+            return true;
+        
+        result = true;
+        this.nickname.up('.input-box').addClassName('loading');
+        new Ajax.Request(this.nicknameUrl, {
+            method: 'post',
+            parameters: {
+                nickname: v
+            },
+            asynchronous: false,
+            onSuccess: function (transport) {
+                var response = transport.responseText;
+                
+                result = response === 'ok';
+            },
+            onComplete: function() {
+                self.nickname.up('.input-box').removeClassName('loading');
+            }
+        });
+        
+        return result;
+    },
+    
+    validateDob: function (v) {
+        var result,
+            self = this;
+        if ( ! v.length || ! this.existingAccount.checked || ! this.nickname.value.length)
+            return true;
+        
+        result = true;
+        this.dob.up('.input-box').addClassName('loading');
+        new Ajax.Request(this.dobUrl, {
+            method: 'post',
+            parameters: {
+                nickname: this.nickname.value,
+                dob: v
+            },
+            asynchronous: false,
+            onSuccess: function (transport) {
+                var response = transport.responseText;
+                
+                result = response === 'ok';
+            },
+            onComplete: function() {
+                self.dob.up('.input-box').removeClassName('loading');
+            }
+        });
+        
+        return result;
+    },
+    
+    bindValidations: function (newAccount, existingAccount, guestAccount, nickname, dob, nicknameUrl, dobUrl) {
+        this.newAccount = newAccount;
+        this.existingAccount = existingAccount;
+        this.guestAccount = guestAccount;
+        this.nickname = nickname;
+        this.dob = dob;
+        this.nicknameUrl = nicknameUrl;
+        this.dobUrl = dobUrl;
+        
+        newAccount.on('change', this.onAccountTypeChange.bind(this));
+        existingAccount.on('change', this.onAccountTypeChange.bind(this));
+        guestAccount.on('change', this.onAccountTypeChange.bind(this));
+        
+        Validation.add('validate-fp-nickname', 'User with this nickname already exists', this.validateNickname.bind(this));  
+        Validation.add('validate-fp-dob', 'There is no user with given nickname and date of birth', this.validateDob.bind(this));  
+ 
+        nickname.addClassName('validate-fp-nickname').on('change', this.onNicknameChange.bind(this));
+        dob.addClassName('validate-fp-dob').on('change', this.onDobChange.bind(this));
+    },
+    
     setUpHook: function () {
         var fallbackValidate = ShippingMethod.prototype.validate,
             fallbackNextStep = ShippingMethod.prototype.nextStep;

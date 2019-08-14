@@ -53,3 +53,5 @@ All Orders,Tutte le Transazioni
 "To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point","All’indirizzo email specificato nei dati di fatturazione <b>%s</b> riceverete un’email con le credenziali di accesso al portale Fermo!Point"
 "Auto Ship","Spedizione automatica"
 "Create shipments automatically after invoicing","Crea automaticamente la spedizione a seguito della fatturazione"
+"Delivery as HOST of %s. You will use the service without any registration.","Prenota la consegna come ospite di %s. Utilizzerai il servizio senza doverti registrare."
+"There is no user with given nickname and date of birth","La coppia nickname / data di nascita non sembra essere corretta"

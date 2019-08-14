@@ -81,5 +81,12 @@
     width: 40px;
 }
 
-#fermopoint_point .nick.info, #fermopoint_point .phone.info { display: block; font-size: 12px; color: #6B749A; }
+#fermopoint_point .nick.info, 
+#fermopoint_point .dob.info, 
+#fermopoint_point .phone.info { display: block; font-size: 12px; color: #6B749A; }
 
+#fermopoint_dob_trig {display: inline-block; }
+
+
+.input-box .ajax-validate {display: none;}
+.input-box.loading .ajax-validate {display: inline; position: relative; left: -25px;}

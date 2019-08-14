@@ -77,6 +77,16 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->_getSessionData('phone_number', '');
     }
     
+    public function setDob($dob)
+    {
+        $this->_setSessionData('dob', $dob);
+    }
+    
+    public function getDob()
+    {
+        return $this->_getSessionData('dob', '');
+    }
+    
 	public function getChangeMethodUrl()
 	{
 		return $this->_getUrl('fpstorepickup/index/changemethod', array('_secure' => true));		
@@ -85,6 +95,16 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
     public function getSearchUrl()
 	{
 		return $this->_getUrl('fpstorepickup/index/search', array('_secure' => true));		
+	}
+    
+    public function getValidateNicknameUrl()
+	{
+		return $this->_getUrl('fpstorepickup/validate/nickname', array('_secure' => true));		
+	}
+    
+    public function getValidateDobUrl()
+	{
+		return $this->_getUrl('fpstorepickup/validate/dob', array('_secure' => true));		
 	}
     
     public function getLocationUrl()
@@ -114,4 +134,27 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
 		$cart = Mage::getSingleton('checkout/cart');
 		return $cart->getQuote()->getShippingAddress();
 	}
+    
+    public function convertDate($date)
+    {
+        $locale = Mage::app()->getLocale();
+        $dateObj = $locale->date(null, null, $locale->getLocaleCode(), false);
+
+        $dateObj->setTimezone(
+            Mage::app()->getStore()->getConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE)
+        );
+
+        //set begining of day
+        $dateObj->setHour(00);
+        $dateObj->setMinute(00);
+        $dateObj->setSecond(00);
+
+        //set date with applying timezone of store
+        $dateObj->set($date, Zend_Date::DATE_SHORT, $locale->getLocaleCode());
+
+        //convert store date to default date in UTC timezone without DST
+        //$dateObj->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE);
+        
+        return $dateObj->toString('yyyy-MM-dd');
+    }
 }

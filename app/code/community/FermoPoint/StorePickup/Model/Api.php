@@ -117,6 +117,22 @@ class FermoPoint_StorePickup_Model_Api {
         ));
     }
     
+    public function isNicknameAndDobMatch($nickname, $dob)
+    {
+        return $this->call('users/check', array(
+            'nickname' => $nickname,
+            'born_date' => $dob,
+        ));
+    }
+    
+    public function isGuestNicknameAndDobMatch($nickname, $dob)
+    {
+        return $this->call('users/guest-check', array(
+            'nickname' => $nickname,
+            'born_date' => $dob,
+        ));
+    }
+    
     public function isEmailAvailable($email)
     {
         return $this->call('users/email', array(
@@ -143,6 +159,7 @@ class FermoPoint_StorePickup_Model_Api {
             'nickname' => $orderPoint->getNickname(),
             'email' => $orderPoint->getEmail(),
             'phone_number' => $orderPoint->getPhoneNumber(),
+            'born_date' => $orderPoint->getDob(),
         );
         if ( ! $data['existing_user'])
         {
@@ -162,6 +179,7 @@ class FermoPoint_StorePickup_Model_Api {
                 'email' => $orderPoint->getEmail(),
                 'phone_number' => $orderPoint->getPhoneNumber(),
                 'full_name' => $order->getCustomerName(),
+                'born_date' => $orderPoint->getDob(),
                 'address' => array(
                     's' => $billingAddress->getStreetFull(),
                     'e' => null,
@@ -170,7 +188,6 @@ class FermoPoint_StorePickup_Model_Api {
                     'p' => $billingAddress->getPostcode(),
                     'd' => $regionCode,
                 ),
-                //'born_date' => '1988-01-01',
                 //'tax_code' => 'AAAAAA11A11A111A',
                 'newsletter' => true,
             );
@@ -220,7 +237,7 @@ class FermoPoint_StorePickup_Model_Api {
     
     public function getOrders($limit = 20, $offset = 0)
     {
-        return $this->call('orders', array(), array('take' => $limit, 'skip' => $offset));
+        return $this->call('orders', array('take' => $limit, 'skip' => $offset, 'orderby' => 'date'), array());
     }
     
 }

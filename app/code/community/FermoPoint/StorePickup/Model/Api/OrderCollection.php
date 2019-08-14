@@ -28,12 +28,14 @@ class FermoPoint_StorePickup_Model_Api_OrderCollection extends Varien_Data_Colle
             $raw = Mage::getSingleton('fpstorepickup/api')->getOrders($limit, ($offset - 1) * $limit);
         } catch (FermoPoint_StorePickup_Exception $e) {
             $raw = array(
-                array(
-                    'email' => Mage::helper('fpstorepickup')->__('Service is not available at the moment, please try again later'),
-                )
+                'orders' => array(
+                    array(
+                        'email' => Mage::helper('fpstorepickup')->__('Service is not available at the moment, please try again later'),
+                    ),
+                ),
             );
         }
-        foreach ($raw as $row)
+        foreach ($raw['orders'] as $row)
         {
             $obj = new Varien_Object();
             $obj->setData($row);

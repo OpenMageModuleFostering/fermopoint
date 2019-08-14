@@ -3,7 +3,7 @@
 class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
 {
 
-    const API_VERSION = '0.9';
+    const API_VERSION = '1.1';
     
     const ENDPOINT_PRODUCTION = 'http://api.fermopoint.it/api/v:api_version/:api_method';
     const ENDPOINT_SANDBOX = 'http://sandbox.fermopoint.it/api/v:api_version/:api_method';
@@ -19,10 +19,23 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     const XML_PATH_ALLOWSPECIFIC = 'carriers/fpstorepickup/allowspecific_payment';
     const XML_PATH_SPECIFICPAYMENTS = 'carriers/fpstorepickup/specificpayment';
     const XML_PATH_AUTOSHIP = 'carriers/fpstorepickup/auto_ship';
+    const XML_PATH_GUEST = 'carriers/fpstorepickup/guest';
+    const XML_PATH_GUEST_NICKNAME = 'carriers/fpstorepickup/guest_nickname';
+    const XML_PATH_GUEST_DOB = 'carriers/fpstorepickup/guest_dob';
     
     public function getAutoShip()
     {
         return Mage::getStoreConfigFlag(self::XML_PATH_AUTOSHIP);
+    }
+    
+    public function getGuestEnabled()
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_GUEST);
+    }
+    
+    public function resetGuestEnabled()
+    {
+        Mage::getModel('core/config')->saveConfig(self::XML_PATH_GUEST, 0);
     }
     
     public function getTosAccepted()
@@ -33,6 +46,16 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     public function getClientId()
     {
         return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTID);
+    }
+    
+    public function getGuestNickname()
+    {
+        return (string) Mage::getStoreConfig(self::XML_PATH_GUEST_NICKNAME);
+    }
+    
+    public function getGuestDob()
+    {
+        return (string) Mage::getStoreConfig(self::XML_PATH_GUEST_DOB);
     }
     
     public function getAllowSpecificPayments()

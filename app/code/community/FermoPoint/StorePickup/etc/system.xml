@@ -101,6 +101,37 @@
                             <comment>Create shipments automatically after invoicing</comment>
                         </auto_ship>
                         
+                        <guest translate="label">
+                            <label>Enable Guest</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </guest>
+                        
+                        <guest_nickname translate="label">
+                            <label>Guest Nickname</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>26</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </guest_nickname>
+                        <guest_dob translate="label comment">
+                            <label>Guest Date of Birth</label>
+                            <comment>YYYY-MM-DD</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>27</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </guest_dob>
+                        
                         <cost translate="label">
                             <label>Cost</label>
                             <frontend_type>text</frontend_type>

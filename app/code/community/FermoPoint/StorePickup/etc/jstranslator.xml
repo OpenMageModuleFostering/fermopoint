@@ -24,4 +24,10 @@
     <fermopoint-hours translate="message" module="fpstorepickup">
         <message>Hours</message>
     </fermopoint-hours>
+    <fermopoint-nickname-exists translate="message" module="fpstorepickup">
+        <message>User with this nickname already exists</message>
+    </fermopoint-nickname-exists>
+    <fermopoint-combo-mismatch translate="message" module="fpstorepickup">
+        <message>There is no user with given nickname and date of birth</message>
+    </fermopoint-combo-mismatch>
 </jstranslator>

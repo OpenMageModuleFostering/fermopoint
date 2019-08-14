@@ -51,5 +51,10 @@ class FermoPoint_StorePickup_Block_Map extends Mage_Core_Block_Template
     {
         return Mage::getSingleton('checkout/session')->getQuote()->getCustomerEmail();
     }
+    
+    public function getUserDob()
+    {
+        return '';
+    }
 	
 }

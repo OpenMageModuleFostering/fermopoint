@@ -2,7 +2,7 @@
 <config>
     <modules>
         <FermoPoint_StorePickup>
-            <version>1.1.0</version>
+            <version>1.1.2</version>
         </FermoPoint_StorePickup>
     </modules>
     <global>
@@ -197,6 +197,16 @@
                 </fpstorepickup>
             </updates>
         </layout>
+        <events>
+            <admin_system_config_section_save_after>
+                <observers>
+                    <fermopoint_storepickup_observer>
+                        <class>fpstorepickup/observer</class>
+                        <method>onSystemConfigSaveAfter</method>
+                    </fermopoint_storepickup_observer>
+                </observers>
+            </admin_system_config_section_save_after>
+        </events>
     </adminhtml>
     <default>
         <carriers>
@@ -208,6 +218,7 @@
                 <auto_ship>1</auto_ship>
                 <sandbox>1</sandbox>
                 <debug>1</debug>
+                <guest>0</guest>
                 <cost>0</cost>
                 <maximum_subtotal>500</maximum_subtotal>
                 <maximum_weight>15</maximum_weight>

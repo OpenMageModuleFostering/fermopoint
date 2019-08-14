@@ -32,20 +32,37 @@
         <p id="fermopoint_point_address"></p>
         <ul class="form-list">
             <li class="control">
-                <input type="radio" name="fermopoint_account" id="fermopoint_account:new" value="new" title="<?php echo  $this->__('I did not use Fermo!Point before') ?>" onclick="$$('.fermopoint-new-account').each(function (el) {el.show()});$$('.fermopoint-existing-account').each(function (el) {el.hide()});" checked="checked" class="radio" /><label for="fermopoint_account:new"><?php echo  $this->__('I did not use Fermo!Point before') ?></label></li>
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:new" value="new" title="<?php echo  $this->__('I did not use Fermo!Point before') ?>" onclick="$$('.fermopoint-new-account, .fermopoint-account').each(function (el) {el.show()});$$('.fermopoint-existing-account,.fermopoint-guest').each(function (el) {el.hide()});" checked="checked" class="radio" /><label for="fermopoint_account:new"><?php echo  $this->__('I did not use Fermo!Point before') ?></label></li>
             </li>
             <li class="control">
-                <input type="radio" name="fermopoint_account" id="fermopoint_account:existing" value="existing" title="<?php echo  $this->__('I have used Fermo!Point in the past') ?>" onclick="$$('.fermopoint-new-account').each(function (el) {el.hide()});$$('.fermopoint-existing-account').each(function (el) {el.show()});" class="radio" /><label for="fermopoint_account:existing"><?php echo  $this->__('I have used Fermo!Point in the past') ?></label></li>
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:existing" value="existing" title="<?php echo  $this->__('I have used Fermo!Point in the past') ?>" onclick="$$('.fermopoint-new-account,.fermopoint-guest').each(function (el) {el.hide()});$$('.fermopoint-existing-account,.fermopoint-account').each(function (el) {el.show()});" class="radio" /><label for="fermopoint_account:existing"><?php echo  $this->__('I have used Fermo!Point in the past') ?></label></li>
             </li>
-            <li class="fields">
+            <?php if (Mage::helper('fpstorepickup/config')->getGuestEnabled()) : ?>
+            <li class="control">
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:guest" value="guest" title="<?php echo  $this->__('Check out as guest') ?>" onclick="$$('.fermopoint-new-account,.fermopoint-account').each(function (el) {el.hide()});$$('.fermopoint-existing-account,.fermopoint-guest').each(function (el) {el.show()});" class="radio" /><label for="fermopoint_account:guest"><?php echo  $this->__('Delivery as HOST of %s. You will use the service without any registration.', Mage::app()->getStore()->getFrontendName()) ?></label></li>
+            </li>
+            <?php endif ?>
+            <li class="fields fermopoint-account">
                 <div class="field">
                     <label for="fermopoint_nickname" class="required"><em>*</em><?php echo $this->__('Nickname') ?></label>
                     <label for="fermopoint_nickname" class="nick info fermopoint-existing-account" style="display:none;">(<?php echo $this->__('Please enter your Nickname. The nickname will be required at the time of withdrawal of the package') ?>)</label>
                     <label for="fermopoint_nickname" class="nick info fermopoint-new-account">(<?php echo $this->__('Choose and enter your nickname. The nickname will be required at the time of withdrawal of the package') ?>)</label>
                     <div class="input-box">
                         <input type="text" name="fermopoint_nickname" id="fermopoint_nickname" title="<?php echo $this->__('Nickname') ?>" class="input-text required-entry" />
+                        <img class="ajax-validate" src="<?php echo $this->getSkinUrl('fermopoint/images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading') ?>" />
                     </div>
                 </div>
+                <div class="field">
+                    <label for="fermopoint_dob" class="required"><em>*</em><?php echo $this->__('Date of Birth') ?></label>
+                    <label for="fermopoint_dob" class="dob info">(<?php echo $this->__('Enter your birth date') ?>)</label>
+                    <div class="input-box">
+                        <input type="text" name="fermopoint_dob" id="fermopoint_dob" title="<?php echo $this->__('Date of Birth') ?>" value="<?php echo $this->escapeHtml($this->getUserDob()) ?>" class="input-text required-entry" />
+                        <img class="ajax-validate" src="<?php echo $this->getSkinUrl('fermopoint/images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading') ?>" />
+                        <img style="" title="Select Date" id="fermopoint_dob_trig" class="v-middle" alt="" src="<?php echo $this->getSkinUrl("images/calendar.gif");?> "/>
+                    </div>
+                </div>
+            </li>
+            <li class="fields">
                 <div class="field">
                     <label for="fermopoint_phone"><?php echo $this->__('Mobile phone') ?></label>
                     <label for="fermopoint_phone" class="phone info">(<?php echo $this->__('Enter your cell phone number for delivery') ?>)</label>
@@ -55,24 +72,33 @@
                 </div>
             </li>
         </ul>
-        <p class="fermopoint-new-account">
-            <?php echo $this->__('The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point') ?>
-        </p>
-        <p class="fermopoint-new-account">
-            <?php echo $this->__('To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point', $this->htmlEscape($this->getUserEmail())) ?>
-        </p>
-        <?php if ( ! empty($tosUrl)) : ?>
-        <div id="fermopoint_conditions" class="fermopoint-new-account">
-            <iframe src="<?php echo $tosUrl ?>">
-                <p><?php echo $this->__('Your browser does not support iframes.') ?></p>
-            </iframe>
-            <div style="clear: both"></div>
-            <p class="checkbox">
-                <input type="checkbox" name="fermopoint_accept_terms" id="fermopoint_accept_terms" value="1" autocomplete="off" class="required-entry" />
-                <label for="fermopoint_accept_terms"><?php echo $this->__('I accept Fermo!Point terms and conditions') ?></label>
+        <div class="fermopoint-account">
+            <p class="fermopoint-new-account">
+                <?php echo $this->__('The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point') ?>
+            </p>
+            <p class="fermopoint-new-account">
+                <?php echo $this->__('To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point', $this->htmlEscape($this->getUserEmail())) ?>
+            </p>
+        
+            
+            <?php if ( ! empty($tosUrl)) : ?>
+            <div id="fermopoint_conditions" class="fermopoint-new-account">
+                <iframe src="<?php echo $tosUrl ?>">
+                    <p><?php echo $this->__('Your browser does not support iframes.') ?></p>
+                </iframe>
+                <div style="clear: both"></div>
+                <p class="checkbox">
+                    <input type="checkbox" name="fermopoint_accept_terms" id="fermopoint_accept_terms" value="1" autocomplete="off" class="required-entry" />
+                    <label for="fermopoint_accept_terms"><?php echo $this->__('I accept Fermo!Point terms and conditions') ?></label>
+                </p>
+            </div>
+            <?php endif ?>
+        </div>
+        <div class="fermopoint-guest" style="display: none;">
+            <p class="guest-account" style="display: none;">
+                <?php echo $this->__('You will check out as guest.') ?>
             </p>
         </div>
-        <?php endif ?>
     </div>
 </div>
 <script type="text/javascript">
@@ -104,6 +130,15 @@
             //+ ' ' + point.country_id
         ;
     };
+    fpStorePickup.bindValidations(
+        $('fermopoint_account:new'),
+        $('fermopoint_account:existing'),
+        $('fermopoint_account:guest'),
+        $('fermopoint_nickname'),
+        $('fermopoint_dob'),
+        '<?php echo Mage::helper('fpstorepickup')->getValidateNicknameUrl() ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getValidateDobUrl() ?>'
+    );
     
     Event.observe('fermopoint_search', 'click', function (event) {
         event.preventDefault();
@@ -113,6 +148,15 @@
         }
             
         fpStorePickup.search($('fermopoint_search_address').value, $('fermopoint_search_radius').value);
+    });
+    
+    Calendar.setup({
+        inputField: "fermopoint_dob",
+        ifFormat: "<?php echo Mage::app()->getLocale()->getDateStrFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT) ?>",
+        showsTime: false,
+        button: "fermopoint_dob_trig",
+        align: "Bl",
+        singleClick : true
     });
 //]]>
 </script>
