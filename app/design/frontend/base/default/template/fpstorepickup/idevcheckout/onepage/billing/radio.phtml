@@ -1,0 +1,5 @@
+<li class="shipping_other_address">
+    <div class="input-box input-different-shipping checkbox-group">
+        <label for="billing:use_storepickup_shipping"><input onclick="useStorePickup(this);" type="checkbox" name="billing[use_for_shipping]" id="billing:use_storepickup_shipping" value="1" <?php if (Mage::helper('fpstorepickup')->getUseMethod()) : ?> checked="checked" <?php endif ?> /><?php echo $this->__('Fermo!Point Store Pickup'); ?></label>
+    </div>
+</li>	

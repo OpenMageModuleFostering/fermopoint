@@ -19,7 +19,11 @@ FermopointStorePickup.prototype = {
         this.onSearchEnd = null;
         this.onSelectPoint = null;
         
-        this.setUpHook();
+        try {
+            this.setUpHook();
+        } catch (e) {
+            
+        }
     },
     
     forceMapUpdate: function () {
@@ -126,36 +130,40 @@ FermopointStorePickup.prototype = {
             dob.addClassName('validate-fp-dob').observe('change', this.onDobChange.bind(this));
     },
     
+    validateShippingMethod: function () {
+        var pointId,
+            methods;
+            
+        methods = document.getElementsByName('shipping_method');
+        for (var i=0; i<methods.length; i++) {
+            if (methods[i].checked && methods[i].value !== 'fpstorepickup_fpstorepickup') {
+                return true;
+            }
+        }
+        
+        /*if ($('fermopoint_accept_terms') && $('fermopoint_accept_terms').visible() && ! $('fermopoint_accept_terms').checked) {
+            alert(Translator.translate('You should accept FermoPoint terms and conditions').stripTags());
+            return false;
+        }*/
+        pointId = parseInt($('fermopoint_point_id').value, 10);
+        if (pointId <= 0) {
+            alert(Translator.translate('You should select one of available pick-up points to continue').stripTags());
+            return false;
+        }
+        
+        return true;
+    },
+    
     setUpHook: function () {
         var fallbackValidate = ShippingMethod.prototype.validate,
-            fallbackNextStep = ShippingMethod.prototype.nextStep;
+            fallbackNextStep = ShippingMethod.prototype.nextStep,
+            self = this;
         ShippingMethod.prototype.validate = function () {
-            var result,
-                pointId,
-                methods;
-                
-            result = fallbackValidate.call(this);
+            var result = fallbackValidate.call(this);
             if ( ! result)
                 return false;
-                
-            methods = document.getElementsByName('shipping_method');
-            for (var i=0; i<methods.length; i++) {
-                if (methods[i].checked && methods[i].value !== 'fpstorepickup_fpstorepickup') {
-                    return true;
-                }
-            }
             
-            /*if ($('fermopoint_accept_terms') && $('fermopoint_accept_terms').visible() && ! $('fermopoint_accept_terms').checked) {
-                alert(Translator.translate('You should accept FermoPoint terms and conditions').stripTags());
-                return false;
-            }*/
-            pointId = parseInt($('fermopoint_point_id').value, 10);
-            if (pointId <= 0) {
-                alert(Translator.translate('You should select one of available pick-up points to continue').stripTags());
-                return false;
-            }
-            
-            return true;
+            return self.validateShippingMethod();
         };
         
         ShippingMethod.prototype.nextStep = function (transport) {

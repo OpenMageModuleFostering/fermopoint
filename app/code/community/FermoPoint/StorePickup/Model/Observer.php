@@ -40,6 +40,12 @@ class FermoPoint_StorePickup_Model_Observer
         $this->_onSaveShippingMethodBefore($controller, array($this, '_returnError'));
     }
     
+    public function onIdevcheckoutSaveOrderBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_muteError'));
+    }
+    
     public function onFirecheckoutSaveOrderBefore($observer)
     {
         $controller = $observer->getEvent()->getControllerAction();
@@ -232,6 +238,30 @@ class FermoPoint_StorePickup_Model_Observer
         $transport->setHtml($html);
     }
     
+    protected function _insertIdevCheckoutCheckbox(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        $html = $transport->getHtml();
+        if ( ! preg_match('#(<li>.+?billing:use_for_shipping_yes.+?</li>)#ius', $html, $matches))
+            return;
+        
+        $html = str_replace(
+            '!form.validator.validate()',
+            '(!form.validator.validate() || !fpStorePickup.validateShippingMethod())',
+            $html
+        );
+            
+        $html = str_replace(
+            $matches[1], 
+            $matches[1] 
+                . $block->getLayout()->createBlock('fpstorepickup/idevCheckout_billing_radio')->toHtml()
+                . $block->getLayout()->createBlock('fpstorepickup/idevCheckout_billing_js')->toHtml()
+            ,
+            $html
+        );
+        
+        $transport->setHtml($html);
+    }
+    
     protected function _insertMagestoreCheckoutRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
     {
         if ($block->getNameInLayout() != 'onestepcheckout_billing')
@@ -300,6 +330,9 @@ class FermoPoint_StorePickup_Model_Observer
                 break;
             case 'checkout/onepage_shipping_method_additional':
                 $this->_insertMap($block, $event->getTransport());
+                break;
+            case 'onestepcheckout/checkout':
+                $this->_insertIdevCheckoutCheckbox($block, $event->getTransport());
                 break;
             case 'onestepcheckout/onestepcheckout':
                 $this->_insertMagestoreCheckoutRadioJs($block, $event->getTransport());

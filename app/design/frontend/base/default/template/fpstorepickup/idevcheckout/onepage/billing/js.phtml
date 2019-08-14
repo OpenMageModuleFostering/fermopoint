@@ -1,0 +1,67 @@
+<script type="text/javascript">
+//<![CDATA[
+    Element.prototype.triggerFpEvent = function(eventName)
+    {
+        if (document.createEvent)
+        {
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent(eventName, true, true);
+
+            return this.dispatchEvent(evt);
+        }
+
+        if (this.fireEvent)
+            return this.fireEvent('on' + eventName);
+    }
+    var fpStorePickup = new FermopointStorePickup(
+        '<?php echo Mage::helper('fpstorepickup')->getChangeMethodUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getSearchUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getMediaUrl(); ?>',
+        function (point) {
+            var days = [];
+            for (var i = 0; i < point.hours.length; i++) {
+                days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
+            }
+            return '<div class="fermopoint-info-window">' +
+                '<div class="fermopoint-info-row title">' + point.name + '</div>' +
+                '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + point.id + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
+                '<div class="fermopoint-info-row"></div>' +
+                '<div class="fermopoint-info-row address">' + point.street + ', ' + point.city + ', ' + point.postcode + ', ' + point.region + '</div>' +
+                '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
+                '<div class="fermopoint-info-row hours"><div class="hours-list">' + days.join('<br />') + '</div></div></div>';
+        }
+    );
+    
+    function initStorePickup() {
+        var element = $('billing:use_storepickup_shipping'),
+            control = $('billing:use_for_shipping_yes');
+        if (element && control) {
+            if (element.checked) {
+                control.up('li').hide();
+                control.checked = true;
+            } else {
+                control.up('li').show();
+            }
+        }
+    }
+    initStorePickup();
+    
+    function useStorePickup(element) {
+        var control;
+        control = $('billing:use_for_shipping_yes');
+        if (control) {
+            if (element.checked) {
+                control.up('li').hide();
+                control.checked = true;
+            } else {
+                control.up('li').show();
+            }
+        }
+        fpStorePickup.setUseStorePickup(element.checked, function (flag) {
+            $('billing:use_for_shipping_yes').triggerFpEvent('click');
+        });
+        
+    }
+
+//]]>
+</script>
