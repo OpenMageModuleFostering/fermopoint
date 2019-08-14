@@ -4,8 +4,10 @@ class FermoPoint_StorePickup_Model_Api_SearchData extends Varien_Object {
 
     protected function _validate()
     {
-        if ( ! Zend_Validate::is($this->getAddress(), 'NotEmpty')
-            || ! Zend_Validate::is($this->getRadius(), 'NotEmpty')
+        if (( ! Zend_Validate::is($this->getAddress(), 'NotEmpty')
+            && ( ! Zend_Validate::is($this->getLatitude(), 'NotEmpty')
+               || ! Zend_Validate::is($this->getLongitude(), 'NotEmpty')
+            )) || ! Zend_Validate::is($this->getRadius(), 'NotEmpty')
         ) 
             Mage::throwException(Mage::helper('fpstorepickup')->__('Invalid search parameters.'));
             
@@ -14,6 +16,10 @@ class FermoPoint_StorePickup_Model_Api_SearchData extends Varien_Object {
     
     protected function _searchLocation()
     {
+        $address = $this->getAddress();
+        if (empty($address))
+            return $this;
+        
         $location = Mage::getSingleton('fpstorepickup/googleMaps')->getLocation($this->getAddress());
         if ($location === null)
             Mage::throwException(Mage::helper('fpstorepickup')->__('Location does not found'));
@@ -39,7 +45,7 @@ class FermoPoint_StorePickup_Model_Api_SearchData extends Varien_Object {
         $src = $this->toApi();
         $result = true;
         foreach ($src as $key => $val)
-            if ( ! isset($with[$key]) || $with[$key] != $val)
+            if ( ! array_key_exists($key, $with) || $with[$key] != $val)
             {
                 $result = false;
                 break;
@@ -52,7 +58,7 @@ class FermoPoint_StorePickup_Model_Api_SearchData extends Varien_Object {
         $result = array(
             'lat' => $this->getLatitude(),
             'lng' => $this->getLongitude(),
-            'radius' => $this->getRadius(),
+            'radius' => (int) $this->getRadius(),
             'day' => $this->hasData('day') ? (int) $this->getDay() : null,
             'from' => $this->hasData('from') ? (int) $this->getFrom() : 0,
             'to' => $this->hasData('to') ? (int) $this->getTo() : 24,

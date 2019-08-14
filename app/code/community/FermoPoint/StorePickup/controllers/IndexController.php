@@ -21,7 +21,8 @@ class FermoPoint_StorePickup_IndexController extends Mage_Core_Controller_Front_
             $request->loadFromPost($this->getRequest()->getPost());
             $response->setLatitude($request->getLatitude());
             $response->setLongitude($request->getLongitude());
-            $response->setPoints(Mage::getSingleton('fpstorepickup/points')->getPoints($request));
+            if ( ! $request->getAddress())
+                $response->setPoints(Mage::getSingleton('fpstorepickup/points')->getPoints($request));
         } catch (Mage_Core_Exception $e) {
             $response->setError(true);
             $response->setMessage($e->getMessage());

@@ -7,16 +7,18 @@
         <div class="address">
             <div class="fermopoint-address">
                 <input type="text" id="fermopoint_search_address" value="<?php echo $this->htmlEscape($this->getBillingAddress()) ?>" size="50" />
-                <label for="fermopoint_search_radius"><?php echo $this->__('Radius') ?></label>
-                <select id="fermopoint_search_radius">
-                    <option value="1">1 km</option>
-                    <option value="5">5 km</option>
-                    <option value="10">10 km</option>
-                    <option value="20">20 km</option>
-                    <option value="30">30 km</option>
-                    <option value="50">50 km</option>
-                    <option value="100" selected="selected">100 km</option>
-                </select>
+                <div style="display:none">
+                    <label for="fermopoint_search_radius"><?php echo $this->__('Radius') ?></label>
+                    <select id="fermopoint_search_radius">
+                        <option value="1">1 km</option>
+                        <option value="5">5 km</option>
+                        <option value="10">10 km</option>
+                        <option value="20">20 km</option>
+                        <option value="30">30 km</option>
+                        <option value="50">50 km</option>
+                        <option value="100" selected="selected">100 km</option>
+                    </select>
+                </div>
             </div>
             <div class="fermopoint-search">
                 <button id="fermopoint_search" class="button"><span><span><?php echo $this->__('Search') ?></span></span></button>
@@ -113,10 +115,11 @@
     };
     fpStorePickup.onSearchEnd = function (points, error) {
         $('fermopoint_search').removeClassName('in-progress').removeClassName('disabled');
-        if (! error && ! points.length)
+        /*if (! error && ! points.length)
             setTimeout(function () {
                 alert('<?php echo $this->__('No points found around given location') ?>');
             }, 1);
+        */
     };
     fpStorePickup.onSelectPoint = function (point) {
         $('fermopoint_point').show();

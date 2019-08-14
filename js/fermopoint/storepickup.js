@@ -9,7 +9,6 @@ FermopointStorePickup.prototype = {
         
         this.error = false;
 		this.points = [];
-        this.markers = [];
         this.location = null;
         this.map = null;
         this.clusterer = null;
@@ -165,7 +164,7 @@ FermopointStorePickup.prototype = {
         var i,
             bounds;
             
-        if ( ! this.markers.length)
+        if ( ! this.points.length)
             return;
             
         bounds = new google.maps.LatLngBounds();
@@ -173,25 +172,24 @@ FermopointStorePickup.prototype = {
         if (this.location)
             bounds.extend(this.location.getPosition());
             
-        for (i = 0; i < this.markers.length; i++)
-            bounds.extend(this.markers[i].getPosition());
+        for (i = 0; i < this.points.length; i++)
+            bounds.extend(this.points[i].marker.getPosition());
             
         this.map.fitBounds(bounds);
     },
     
-    showPointInfo: function (marker, idx) {
-        var point = this.points[idx], 
-            days = [],
+    showPointInfo: function (marker, point) {
+        var days = [],
             content;
         for (var i = 0; i < point.hours.length; i++) {
             days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
         }
         if (typeof this.infoCallback === 'function')
-            content = this.infoCallback(point, idx);
+            content = this.infoCallback(point);
         else
             content = '<div class="fermopoint-info-window">' +
             '<div class="fermopoint-info-row title">' + point.name + '</div>' +
-            '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + idx + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
+            '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + point.id + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
             '<div class="fermopoint-info-row"></div>' +
             '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
             '<div class="fermopoint-info-row contact"><strong>' + Translator.translate('Contact') + ': </strong>' + point.contact + '</div>'+
@@ -201,43 +199,54 @@ FermopointStorePickup.prototype = {
         this.infoWindow.setContent(content);
         this.infoWindow.open(this.map, marker);  
     },
+    
+    calcDistance: function(p1, p2) {
+        return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+    },
+    
+    addMarker: function (point) {
+        var caller = this,
+            marker = new google.maps.Marker({
+            position: new google.maps.LatLng(point.latitude, point.longitude),
+            map: this.map,
+            icon: this.mediaUrl + 'marker_point.png'
+        });
+        google.maps.event.addListener(marker, 'click', function () {
+            caller.showPointInfo(marker, point);
+        });
+        return marker;
+    },
 	
 	setPoints: function (points) {
-        var i, marker, point, caller = this;
-        for (i = 0; i < this.markers.length; i++)
-            this.markers[i].setMap(null);
+        var i, point, markers, marker;
+        for (i = 0; i < this.points.length; i++)
+            this.points[i].marker.setMap(null);
             
         this.clusterer.clearMarkers();
-        this.markers.length = 0;
     
 		this.points = points;
         if ( ! this.points.length)
             return;
         
+        markers = [];
         for (i = 0; i < this.points.length; i++) {
             point = this.points[i];
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(point.latitude, point.longitude),
-                map: this.map,
-                icon: this.mediaUrl + 'marker_point.png'
-            });
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function () {
-                    caller.showPointInfo(marker, i);
-                }
-            })(marker, i));
-            this.markers.push(marker);
+            marker = this.addMarker(point);
+            this.points[i].marker = marker;
+            markers.push(marker);
         }
         
-        this.clusterer.addMarkers(this.markers);
+        this.clusterer.addMarkers(markers);
         
-        this.rebound();
+        //this.rebound();
 	},
     
-    choosePoint: function (idx) {
+    choosePoint: function (id) {
         this.infoWindow.close();
         if (typeof(this.onSelectPoint) === 'function')
-            this.onSelectPoint.call(this, this.points[idx]);
+            for (var i = 0; i < this.points.length; i++)
+                if (this.points[i].id == id)
+                    this.onSelectPoint.call(this, this.points[i]);
     },
 	
     initMap: function (container) {
@@ -274,20 +283,54 @@ FermopointStorePickup.prototype = {
                 url: this.mediaUrl +  'cluster4.png'
             }]
         });
-          
+        
+        this.searchBounds(41.9000, 12.4833, 5000);
+        
         if (typeof(this.onInit) === 'function')
             this.onInit.call(this);
     },
     
     setLocation: function (lat, lng) {
+        var position = new google.maps.LatLng(lat, lng);
         if (this.location)
             this.location.setMap(null);
         this.location = new google.maps.Marker({
-            position: new google.maps.LatLng(lat, lng),
+            position: position,
             map: this.map
         });
+        this.map.setCenter(position);
+        this.map.setZoom(12);
         
-        this.rebound();
+        //this.rebound();
+    },
+    
+    searchBounds: function (latitude, longitude, radius) {
+        var url = this.searchUrl,
+            caller = this;
+            
+        if (typeof(this.onSearchStart) === 'function')
+            this.onSearchStart.call(this);
+        
+        new Ajax.Request(url, {
+            parameters: {
+                latitude: latitude,
+                longitude: longitude,
+                radius: radius
+            },
+            onComplete: function () {
+                if (typeof(caller.onSearchEnd) === 'function')
+                    caller.onSearchEnd.call(caller, caller.points, caller.error);
+            },
+            onSuccess: function(transport) {
+                var json = transport.responseText.evalJSON();
+                caller.error = json.error;
+                
+                if (json.error)
+                    return;
+                
+                caller.setPoints(json.points);
+            }
+        });
     },
     
     search: function (address, radius) {
@@ -321,7 +364,6 @@ FermopointStorePickup.prototype = {
                 }
                 
                 caller.setLocation(json.latitude, json.longitude);
-                caller.setPoints(json.points);
             }
         });
     },

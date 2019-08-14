@@ -33,6 +33,7 @@ class FermoPoint_StorePickup_Block_Map extends Mage_Core_Block_Template
         $params = array(
             'v' => '3.exp',
             'region' => 'it',
+            'libraries' => 'geometry',
         );
         if ($apiKey = Mage::helper('fpstorepickup/config')->getGMapsKey())
             $params['key'] = $apiKey;

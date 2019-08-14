@@ -4,14 +4,14 @@
         '<?php echo Mage::helper('fpstorepickup')->getChangeMethodUrl(); ?>',
         '<?php echo Mage::helper('fpstorepickup')->getSearchUrl(); ?>',
         '<?php echo Mage::helper('fpstorepickup')->getMediaUrl(); ?>',
-        function (point, idx) {
+        function (point) {
             var days = [];
             for (var i = 0; i < point.hours.length; i++) {
                 days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
             }
             return '<div class="fermopoint-info-window">' +
                 '<div class="fermopoint-info-row title">' + point.name + '</div>' +
-                '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + idx + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
+                '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + point.id + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
                 '<div class="fermopoint-info-row"></div>' +
                 '<div class="fermopoint-info-row address">' + point.street + ', ' + point.city + ', ' + point.postcode + ', ' + point.region + '</div>' +
                 '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
