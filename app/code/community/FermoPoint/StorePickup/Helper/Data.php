@@ -5,6 +5,25 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
         
     const SESSION_KEY = 'fermopoint_storepickup';
     
+    protected $_isOneStepCheckout;
+    
+    public function getIsOneStepCheckout()
+    {
+        if ($this->_isOneStepCheckout === null)
+        {
+            $this->_isOneStepCheckout = false;
+            if ('true' == (string)Mage::getConfig()->getNode('modules/NCR_ProductLists/active'))
+            {
+                $helper = Mage::helper('firecheckout');
+                if ($helper !== false)
+                {
+                    $this->_isOneStepCheckout = $helper->canFireCheckout();
+                }
+            }
+        }
+        return $this->_isOneStepCheckout;
+    }
+    
     protected function _getSessionData($key, $default = null)
     {
         $session = Mage::getSingleton('checkout/session');

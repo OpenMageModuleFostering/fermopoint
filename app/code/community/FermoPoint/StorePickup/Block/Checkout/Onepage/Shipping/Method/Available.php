@@ -36,8 +36,27 @@ class FermoPoint_StorePickup_Block_Checkout_Onepage_Shipping_Method_Available ex
     
     protected function _afterToHtml($html)
     {
-        if ($this->_storePickupAvailable)
+        if ($this->_storePickupAvailable && ! Mage::helper('fpstorepickup')->getIsOneStepCheckout())
             $html .= $this->getLayout()->createBlock('fpstorepickup/map')->toHtml();
+        elseif (Mage::helper('fpstorepickup')->getIsOneStepCheckout())
+        {
+            $flag = Mage::helper('core')->jsonEncode($this->_storePickupAvailable);
+            $html .= <<<JS
+<script type="text/javascript">
+    (function () {
+        var flag = {$flag},
+            container = $('fermopoint_outer');
+        if ( ! container)
+            return;
+        if (flag)
+            container.show();
+        else
+            container.hide();
+    })();
+</script>
+JS
+            ;
+        }
         
         return $html;
     }

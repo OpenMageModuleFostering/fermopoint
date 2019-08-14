@@ -1,6 +1,6 @@
 <?php $tosUrl = $this->getTosUrl() ?>
 <?php $mapId = uniqid() ?>
-<div class="fermopoint">
+<div class="fermopoint" id="fermopoint_outer"<?php if ($this->getInitiallyHidden()) echo ' style="display:none"' ?>>
     <div id="fermopoint_map">
         <h3><?php echo $this->__('Search for pick-up points') ?></h3>
         <p><?php echo $this->__('You are viewing the collection points closest to the address below. If you want, you can enter a different address.') ?></p>
@@ -120,7 +120,10 @@
     };
     fpStorePickup.onSelectPoint = function (point) {
         $('fermopoint_point').show();
-        Effect.ScrollTo('fermopoint_point');
+        try {
+            Effect.ScrollTo('fermopoint_point');
+        } catch (e) {
+        }
         $('fermopoint_point_id').value = point.id;
         $('fermopoint_point_name').innerHTML = point.name;
         $('fermopoint_point_address').innerHTML = point.street
@@ -129,6 +132,16 @@
             + ' ' + point.region
             //+ ' ' + point.country_id
         ;
+        try {
+            var arr = FireCheckout.Ajax.getSectionsToUpdate('shipping-method');
+            arr.push('shipping-address-review');
+            checkout.update(
+                checkout.urls.shipping_method,
+                FireCheckout.Ajax.arrayToJson(arr)
+            );
+            reviewInfo.update('shipping-address');
+        } catch (e) {
+        }
     };
     fpStorePickup.bindValidations(
         $('fermopoint_account:new'),

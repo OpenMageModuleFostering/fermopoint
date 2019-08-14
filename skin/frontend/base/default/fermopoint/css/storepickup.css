@@ -90,3 +90,9 @@
 
 .input-box .ajax-validate {display: none;}
 .input-box.loading .ajax-validate {display: inline; position: relative; left: -25px;}
+
+.firecheckout-index-index .col3-set.firecheckout-set .form-list .control label[for="shipping:same_as_billing_point"] { width: 90% !important; }
+.firecheckout-index-index .fermopoint .form-list .fields .field { width: 100%; }
+.firecheckout-index-index #shipping:same_as_billing_point { vertical-align: top; }
+.firecheckout-index-index #fermopoint_search_address { display: block; }
+.firecheckout-index-index .fermopoint-info-window { min-width: 220px; }

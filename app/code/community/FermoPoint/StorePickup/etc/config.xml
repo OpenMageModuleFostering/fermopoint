@@ -2,7 +2,7 @@
 <config>
     <modules>
         <FermoPoint_StorePickup>
-            <version>1.1.4</version>
+            <version>1.2.0</version>
         </FermoPoint_StorePickup>
     </modules>
     <global>
@@ -152,6 +152,22 @@
                     </fermopoint_storepickup_observer>
                 </observers>
             </checkout_controller_onepage_save_shipping_method>
+            <controller_action_predispatch_firecheckout_index_saveOrder>
+                <observers>
+                    <fermopoint_storepickup_observer>
+                        <class>fpstorepickup/observer</class>
+                        <method>onFirecheckoutSaveOrderBefore</method>
+                    </fermopoint_storepickup_observer>
+                </observers>
+            </controller_action_predispatch_firecheckout_index_saveOrder>
+            <controller_action_predispatch_firecheckout_index_saveShippingMethod>
+                <observers>
+                    <fermopoint_storepickup_observer>
+                        <class>fpstorepickup/observer</class>
+                        <method>onFirecheckoutSaveShippingMethodBefore</method>
+                    </fermopoint_storepickup_observer>
+                </observers>
+            </controller_action_predispatch_firecheckout_index_saveShippingMethod>
             <controller_action_predispatch_checkout_onepage_saveShippingMethod>
                 <observers>
                     <fermopoint_storepickup_observer>

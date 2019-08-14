@@ -22,6 +22,10 @@ FermopointStorePickup.prototype = {
         this.setUpHook();
     },
     
+    forceMapUpdate: function () {
+        google.maps.event.trigger(this.map, 'resize');
+    },
+    
     clearValidations: function (input) {
     },
     
@@ -108,7 +112,8 @@ FermopointStorePickup.prototype = {
         
         newAccount.on('change', this.onAccountTypeChange.bind(this));
         existingAccount.on('change', this.onAccountTypeChange.bind(this));
-        guestAccount.on('change', this.onAccountTypeChange.bind(this));
+        if (guestAccount)
+            guestAccount.on('change', this.onAccountTypeChange.bind(this));
         
         Validation.add('validate-fp-nickname', 'User with this nickname already exists', this.validateNickname.bind(this));  
         Validation.add('validate-fp-dob', 'There is no user with given nickname and date of birth', this.validateDob.bind(this));  
@@ -240,7 +245,7 @@ FermopointStorePickup.prototype = {
         
         Event.observe(container, 'click', function (event) { 
             var target = Event.findElement(event);
-            
+
             if (target.hasClassName('fermopoint-select-me')) {
                 Event.stop(event);
                 caller.choosePoint(parseInt(target.rel), 10);
@@ -284,6 +289,9 @@ FermopointStorePickup.prototype = {
     search: function (address, radius) {
         var url = this.searchUrl,
             caller = this;
+            
+        if ( ! address.length)
+            return;
             
         if (typeof(this.onSearchStart) === 'function')
             this.onSearchStart.call(this);
@@ -344,7 +352,21 @@ FermopointStorePickup.prototype = {
 		else
 			url += 'flag/0';
 		
-		var request = new Ajax.Request(url, {method: 'get', onFailure: ""}); 			
+		var request = new Ajax.Request(url, {
+            method: 'get', 
+            onSuccess: function () {
+                try {
+                    var url = flag ? checkout.urls.billing_address : checkout.urls.shipping_address,
+                    sections = FireCheckout.Ajax.getSectionsToUpdate('shipping');
+
+                    if (sections.length) {
+                        checkout.update(url, FireCheckout.Ajax.arrayToJson(sections));
+                    }
+                } catch (e) {
+                }
+            },
+            onFailure: ""
+        }); 			
 	}
 	
 }

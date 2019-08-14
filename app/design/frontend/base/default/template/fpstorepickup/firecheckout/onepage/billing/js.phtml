@@ -1,0 +1,30 @@
+<script type="text/javascript">
+//<![CDATA[
+    var fpStorePickup = new FermopointStorePickup(
+        '<?php echo Mage::helper('fpstorepickup')->getChangeMethodUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getSearchUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getMediaUrl(); ?>'
+    );
+
+    Event.observe('shipping:same_as_billing_point', 'click', function(event){
+        fpStorePickup.setUseStorePickup(true);
+        if ($('s_method_fpstorepickup_fpstorepickup'))
+            $('s_method_fpstorepickup_fpstorepickup').checked = true;
+        reviewInfo.update('shipping-address');
+    });
+
+    Event.observe('shipping:same_as_billing', 'click', function(event){
+        fpStorePickup.setUseStorePickup(false);
+        if ($('s_method_fpstorepickup_fpstorepickup'))
+            $('s_method_fpstorepickup_fpstorepickup').checked = false;
+        reviewInfo.update('shipping-address');
+    });
+
+    Event.observe('shipping:same_as_billing_no', 'click', function(event){
+        fpStorePickup.setUseStorePickup(false);
+        if ($('s_method_fpstorepickup_fpstorepickup'))
+            $('s_method_fpstorepickup_fpstorepickup').checked = false;
+        reviewInfo.update('shipping-address');
+    });
+//]]>
+</script>

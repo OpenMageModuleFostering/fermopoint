@@ -19,11 +19,41 @@ class FermoPoint_StorePickup_Model_Observer
         $controller->setFlag('', Mage_Core_Controller_Varien_Action::FLAG_NO_DISPATCH, true);
     }
     
+    protected function _returnFirecheckoutError($controller, $message)
+    {
+        $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
+            'success' => false,
+            'error'   => true,
+            'error_messages' => $message,
+        )));
+        $controller->setFlag('', Mage_Core_Controller_Varien_Action::FLAG_NO_DISPATCH, true);
+    }
     
+    protected function _muteError($controller, $message)
+    {
+        // do nothing
+    }
     
     public function onSaveShippingMethodBefore($observer)
     {
         $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_returnError'));
+    }
+    
+    public function onFirecheckoutSaveOrderBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_returnFirecheckoutError'));
+    }
+    
+    public function onFirecheckoutSaveShippingMethodBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_muteError'));
+    }
+        
+    protected function _onSaveShippingMethodBefore($controller, $callback)
+    {
         $request = $controller->getRequest();
         if ( ! $request->isPost())
             return;
@@ -34,7 +64,7 @@ class FermoPoint_StorePickup_Model_Observer
         $pointId = $request->getPost('fermopoint_point_id', 0);
         $point = Mage::getModel('fpstorepickup/point')->load($pointId);
         if ( ! $point->getId())
-            return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Unknown Fermo!Point ID'));
+            return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Unknown Fermo!Point ID'));
         
         $accountType = $request->getPost('fermopoint_account', 'new');
         $config = Mage::helper('fpstorepickup/config');
@@ -53,15 +83,15 @@ class FermoPoint_StorePickup_Model_Observer
             $isGuest = false;
             $nickname = trim($request->getPost('fermopoint_nickname', ''));
             if (empty($nickname))
-                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Nickname'));
+                return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Invalid Nickname'));
             
             $dob = trim($request->getPost('fermopoint_dob', ''));
             if (empty($dob))
-                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
+                return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
             
             $dob = Mage::helper('fpstorepickup')->convertDate($dob);
             if (empty($dob))
-                return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
+                return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Invalid Date of Birth'));
         
             $request->setPost('fermopoint_dob', $dob);
         }
@@ -73,12 +103,12 @@ class FermoPoint_StorePickup_Model_Observer
                 if ($isGuest)
                 {
                     if ( ! $api->isGuestNicknameAndDobMatch($nickname, $dob))
-                        return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
+                        return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
                 }
                 else
                 {
                     if ( ! $api->isNicknameAndDobMatch($nickname, $dob))
-                        return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
+                        return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('There is no user with given nickname and date of birth'));
                 }
                 break;
             
@@ -86,15 +116,15 @@ class FermoPoint_StorePickup_Model_Observer
             default:
                 $email = $this->getQuote()->getCustomerEmail();
                 if ( ! $api->isEmailAvailable($email))
-                    return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Your email is already registered on Fermo!Point'));
+                    return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Your email is already registered on Fermo!Point'));
                 
                 if ( ! $api->isNicknameAvailable($nickname))
-                    return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('User with this nickname already exists'));
+                    return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('User with this nickname already exists'));
         }
         
         /*$telephone = trim($request->getPost('fermopoint_phone', ''));
         if (empty($telephone))
-            return $this->_returnError($controller, Mage::helper('fpstorepickup')->__('Invalid phone number'));
+            return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Invalid phone number'));
         */
     }
 	
@@ -185,6 +215,30 @@ class FermoPoint_StorePickup_Model_Observer
         $transport->setHtml($html);
     }
     
+    protected function _insertFirecheckoutRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        $html = $transport->getHtml();
+        if ( ! preg_match('#(<ul[^>]+>.+?same_as_billing.+?)</ul>#ius', $html, $matches))
+            return;
+            
+        $html = str_replace(
+            $matches[1], 
+            $matches[1] . $block->getLayout()->createBlock('fpstorepickup/fireCheckout_billing_radio')->toHtml(), 
+            $html
+        );
+        $html .= $block->getLayout()->createBlock('fpstorepickup/fireCheckout_billing_js')->toHtml();
+        $transport->setHtml($html);
+    }
+    
+    protected function _insertMap(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        if ( ! Mage::helper('fpstorepickup')->getIsOneStepCheckout())
+            return;
+        $html = $transport->getHtml();
+        $html .= $block->getLayout()->createBlock('fpstorepickup/map')->setInitiallyHidden(true)->toHtml();
+        $transport->setHtml($html);
+    }
+    
     public function onBlockToHtmlAfter($event)
     {
         if ( ! Mage::getStoreConfig('carriers/fpstorepickup/active') 
@@ -196,8 +250,18 @@ class FermoPoint_StorePickup_Model_Observer
         if ( ! $block)
             return;
             
-        if ($block->getType() == 'checkout/onepage_billing')
-            $this->_insertRadioJs($block, $event->getTransport());
+        switch ($block->getType())
+        {
+            case 'checkout/onepage_billing':
+                $this->_insertRadioJs($block, $event->getTransport());
+                break;
+            case 'firecheckout/checkout_shipping':
+                $this->_insertFirecheckoutRadioJs($block, $event->getTransport());
+                break;
+            case 'checkout/onepage_shipping_method_additional':
+                $this->_insertMap($block, $event->getTransport());
+                break;
+        }
     }
     
     public function onOrderInvoicePay($event)

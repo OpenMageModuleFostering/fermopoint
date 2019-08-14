@@ -1,0 +1,4 @@
+<li class="control">
+    <input type="radio" name="shipping[same_as_billing]" onclick="shipping.setSameAsBilling(true)" id="shipping:same_as_billing_point" value="1"<?php if (Mage::helper('fpstorepickup')->getUseMethod()) : ?> checked="checked" <?php endif ?> class="radio" />
+    <label for="shipping:same_as_billing_point"><?php echo $this->__('Fermo!Point Store Pickup') ?></label>
+</li>

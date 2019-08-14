@@ -2,6 +2,8 @@
 
 class FermoPoint_StorePickup_Block_Map extends Mage_Core_Block_Template
 {
+    
+    protected $_initiallyHidden = false;
 
 	public function __construct()
 	{	
@@ -9,6 +11,17 @@ class FermoPoint_StorePickup_Block_Map extends Mage_Core_Block_Template
 		
 		$this->setTemplate('fpstorepickup/map.phtml');
 	}
+    
+    public function getInitiallyHidden()
+    {
+        return $this->_initiallyHidden;
+    }
+    
+    public function setInitiallyHidden($flag)
+    {
+        $this->_initiallyHidden = $flag;
+        return $this;
+    }
     
     public function getTosUrl()
     {
@@ -32,12 +45,21 @@ class FermoPoint_StorePickup_Block_Map extends Mage_Core_Block_Template
     {
         $address = Mage::getSingleton('checkout/session')->getQuote()->getBillingAddress();
         $street = $address->getStreet();
-        $parts = array(
-            (is_array($street) ? implode(', ', $street) : $street) . ',',
-            $address->getPostcode(),
-            $address->getCity(),
-        );
+        $street = is_array($street) ? implode(', ', $street) : $street;
+        $parts = array();
+        if ( ! empty($street))
+        {
+            $street .= ',';
+            $parts[] = $street;
+        }
         
+        $postcode = $address->getPostcode();
+        if ( ! empty($postcode))
+            $parts[] = $postcode;
+          
+        $city = $address->getCity();
+        if ( ! empty($city))
+            $parts[] = $city;
         return implode(' ', $parts);
     }
     
