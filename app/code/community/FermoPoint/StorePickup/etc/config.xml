@@ -2,7 +2,7 @@
 <config>
     <modules>
         <FermoPoint_StorePickup>
-            <version>1.2.2</version>
+            <version>1.3.0</version>
         </FermoPoint_StorePickup>
     </modules>
     <global>
@@ -235,6 +235,7 @@
                 <sandbox>1</sandbox>
                 <debug>1</debug>
                 <guest>0</guest>
+                <cost_mode>flat></cost_mode>
                 <cost>0</cost>
                 <maximum_subtotal>500</maximum_subtotal>
                 <maximum_weight>15</maximum_weight>

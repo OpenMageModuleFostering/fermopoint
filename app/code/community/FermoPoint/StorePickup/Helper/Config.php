@@ -9,7 +9,10 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     const ENDPOINT_SANDBOX = 'http://sandbox.fermopoint.it/api/v:api_version/:api_method';
 
     const XML_PATH_ACCEPT = 'carriers/fpstorepickup/accept';
+    const XML_PATH_COST_MODE = 'carriers/fpstorepickup/cost_mode';
     const XML_PATH_COST = 'carriers/fpstorepickup/cost';
+    const XML_PATH_SUBTOTAL_COST = 'carriers/fpstorepickup/subtotal_cost';
+    const XML_PATH_WEIGHT_COST = 'carriers/fpstorepickup/weight_cost';
     const XML_PATH_SANDBOX = 'carriers/fpstorepickup/sandbox';
     const XML_PATH_DEBUG = 'carriers/fpstorepickup/debug';
     const XML_PATH_CLIENTID = 'carriers/fpstorepickup/client_id';
@@ -20,6 +23,7 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     const XML_PATH_SPECIFICPAYMENTS = 'carriers/fpstorepickup/specificpayment';
     const XML_PATH_AUTOSHIP = 'carriers/fpstorepickup/auto_ship';
     const XML_PATH_GUEST = 'carriers/fpstorepickup/guest';
+    const XML_PATH_GUEST_ONLY = 'carriers/fpstorepickup/guest_only';
     const XML_PATH_GUEST_NICKNAME = 'carriers/fpstorepickup/guest_nickname';
     const XML_PATH_GUEST_DOB = 'carriers/fpstorepickup/guest_dob';
     
@@ -31,6 +35,11 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     public function getGuestEnabled()
     {
         return Mage::getStoreConfigFlag(self::XML_PATH_GUEST);
+    }
+    
+    public function getGuestOnly()
+    {
+        return $this->getGuestEnabled() && Mage::getStoreConfigFlag(self::XML_PATH_GUEST_ONLY);
     }
     
     public function resetGuestEnabled()
@@ -83,9 +92,68 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfigFlag(self::XML_PATH_DEBUG);
     }
     
+    public function getCostMode()
+    {
+        return (string) Mage::getStoreConfig(self::XML_PATH_COST_MODE);
+    }
+    
     public function getCost()
     {
         return (float) Mage::getStoreConfig(self::XML_PATH_COST);
+    }
+    
+    protected function _cmpRules($rule1, $rule2)
+    {
+        if ($rule1['value'] < $rule2['value'])
+            return -1;
+        elseif ($rule1['value'] > $rule2['value'])
+            return 1;
+        else
+            return 0;
+    }
+    
+    protected function _getCostRules($value, $key)
+    {
+        $rules = @unserialize($value);
+        if (is_array($rules))
+        {
+            $result = array();
+            foreach ($rules as $rule)
+            {
+                if ( ! isset($rule[$key]) || ! isset($rule['cost']))
+                    continue;
+                
+                $value = (float) $rule[$key];
+                if ($value <= 0)
+                    continue;
+                
+                $cost = (float) $rule['cost'];
+                $result[] = array(
+                    'value' => $value, 
+                    'cost' => $cost,
+                );
+            }
+            
+            if (count($rules))
+                $result[] = array('value' => 0, 'cost' => 0);
+                
+            usort($result, array($this, '_cmpRules'));
+        }
+        else
+            $result = array();
+        return $result;
+    }
+    
+    public function getSubtotalCost()
+    {
+        $value = Mage::getStoreConfig(self::XML_PATH_SUBTOTAL_COST);
+        return $this->_getCostRules($value, 'subtotal');
+    }
+    
+    public function getWeightCost()
+    {
+        $value = Mage::getStoreConfig(self::XML_PATH_WEIGHT_COST);
+        return $this->_getCostRules($value, 'weight');
     }
     
     public function getTosUrl()

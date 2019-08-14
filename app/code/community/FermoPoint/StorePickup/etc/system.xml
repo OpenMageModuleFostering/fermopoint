@@ -111,27 +111,47 @@
                             <show_in_store>0</show_in_store>
                             <depends><accept>1</accept></depends>
                         </guest>
-                        
-                        <guest_nickname translate="label">
-                            <label>Guest Nickname</label>
-                            <frontend_type>text</frontend_type>
+                        <guest_only translate="label">
+                            <label>Guest Only</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>26</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <depends><accept>1</accept></depends>
-                        </guest_nickname>
-                        <guest_dob translate="label comment">
-                            <label>Guest Date of Birth</label>
-                            <comment>YYYY-MM-DD</comment>
+                            <depends><accept>1</accept><guest>1</guest></depends>
+                        </guest_only>
+                        
+                        <guest_nickname translate="label">
+                            <label>Guest Nickname</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>27</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <depends><accept>1</accept></depends>
+                            <depends><accept>1</accept><guest>1</guest></depends>
+                        </guest_nickname>
+                        <guest_dob translate="label comment">
+                            <label>Guest Date of Birth</label>
+                            <comment>YYYY-MM-DD</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>28</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept><guest>1</guest></depends>
                         </guest_dob>
                         
+                        <cost_mode>
+                            <label>Cost Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>29</sort_order>
+							<source_model>fpstorepickup/source_costmode</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </cost_mode>
                         <cost translate="label">
                             <label>Cost</label>
                             <frontend_type>text</frontend_type>
@@ -140,12 +160,32 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <depends><accept>1</accept></depends>
+                            <depends><accept>1</accept><cost_mode>flat</cost_mode></depends>
                         </cost>	
+                        <subtotal_cost translate="label">
+                            <label>Cost Rules</label>
+                            <frontend_model>fpstorepickup/adminhtml_config_cost_subtotal</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept><cost_mode>subtotal</cost_mode></depends>
+                        </subtotal_cost>	
+                        <weight_cost translate="label">
+                            <label>Cost Rules</label>
+                            <frontend_model>fpstorepickup/adminhtml_config_cost_weight</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>32</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept><cost_mode>weight</cost_mode></depends>
+                        </weight_cost>
                         <maximum_subtotal translate="label">
                             <label>Maximum Subtotal</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>31</sort_order>
+                            <sort_order>35</sort_order>
                             <validate>validate-number</validate>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -155,7 +195,7 @@
                         <maximum_weight translate="label">
                             <label>Maximum Weight</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>32</sort_order>
+                            <sort_order>36</sort_order>
                             <validate>validate-number</validate>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>

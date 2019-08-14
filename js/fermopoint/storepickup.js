@@ -110,16 +110,20 @@ FermopointStorePickup.prototype = {
         this.nicknameUrl = nicknameUrl;
         this.dobUrl = dobUrl;
         
-        newAccount.on('change', this.onAccountTypeChange.bind(this));
-        existingAccount.on('change', this.onAccountTypeChange.bind(this));
+        if (newAccount)
+            newAccount.observe('change', this.onAccountTypeChange.bind(this));
+        if (existingAccount)
+            existingAccount.observe('change', this.onAccountTypeChange.bind(this));
         if (guestAccount)
-            guestAccount.on('change', this.onAccountTypeChange.bind(this));
+            guestAccount.observe('change', this.onAccountTypeChange.bind(this));
         
         Validation.add('validate-fp-nickname', 'User with this nickname already exists', this.validateNickname.bind(this));  
         Validation.add('validate-fp-dob', 'There is no user with given nickname and date of birth', this.validateDob.bind(this));  
  
-        nickname.addClassName('validate-fp-nickname').on('change', this.onNicknameChange.bind(this));
-        dob.addClassName('validate-fp-dob').on('change', this.onDobChange.bind(this));
+        if (nickname)
+            nickname.addClassName('validate-fp-nickname').observe('change', this.onNicknameChange.bind(this));
+        if (dob)
+            dob.addClassName('validate-fp-dob').observe('change', this.onDobChange.bind(this));
     },
     
     setUpHook: function () {
@@ -184,6 +188,8 @@ FermopointStorePickup.prototype = {
         for (var i = 0; i < point.hours.length; i++) {
             days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
         }
+        if (this.location) 
+            point.distance = Math.abs(this.calcDistance(this.location.getPosition(), marker.getPosition()));
         if (typeof this.infoCallback === 'function')
             content = this.infoCallback(point);
         else
@@ -201,7 +207,7 @@ FermopointStorePickup.prototype = {
     },
     
     calcDistance: function(p1, p2) {
-        return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+        return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(1);
     },
     
     addMarker: function (point) {

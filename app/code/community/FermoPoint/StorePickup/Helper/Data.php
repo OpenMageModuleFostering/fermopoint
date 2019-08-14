@@ -180,4 +180,48 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
         
         return $dateObj->toString('yyyy-MM-dd');
     }
+    
+    protected function _getRulesCost($rules, $value)
+    {
+        $result = 0;
+        if (count($rules))
+        {
+            for ($i = 0; $i < count($rules) - 1; $i++)
+            {
+                $rule = $rules[$i];
+                $nextRule = $rules[$i + 1];
+                if ($value > $rule['value'] && $value <= $nextRule['value'])
+                {
+                    $result = $nextRule['cost'];
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+    
+    public function getCost(Mage_Shipping_Model_Rate_Request $request)
+    {
+        $config = Mage::helper('fpstorepickup/config');
+        switch ($config->getCostMode())
+        {
+            case FermoPoint_StorePickup_Model_Source_Costmode::MODE_WEIGHT:  
+                $weight = $request->getPackageWeight();
+                $rules = $config->getWeightCost();
+                $result = $this->_getRulesCost($rules, $weight);
+                break;
+            case FermoPoint_StorePickup_Model_Source_Costmode::MODE_SUBTOTAL:  
+                $subtotal = $request->getBaseSubtotalInclTax();
+                $rules = $config->getSubtotalCost();
+                $result = $this->_getRulesCost($rules, $subtotal);
+                break;
+            case FermoPoint_StorePickup_Model_Source_Costmode::MODE_FLAT:
+            default:
+                $result = $config->getCost();
+                
+                
+        }
+        return $result;
+    }
+    
 }

@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="fermopoint-search">
-                <button id="fermopoint_search" class="button"><span><span><?php echo $this->__('Search') ?></span></span></button>
+                <button id="fermopoint_search" type="button" class="button"><span><span><?php echo $this->__('Search') ?></span></span></button>
                 <img src="<?php echo $this->getSkinUrl('fermopoint/images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading') ?>" />
             </div>
         </div>
@@ -33,6 +33,7 @@
         <h5 id="fermopoint_point_name"></h5>
         <p id="fermopoint_point_address"></p>
         <ul class="form-list">
+            <?php if ( ! Mage::helper('fpstorepickup/config')->getGuestOnly()) : ?>
             <li class="control">
                 <input type="radio" name="fermopoint_account" id="fermopoint_account:new" value="new" title="<?php echo  $this->__('I did not use Fermo!Point before') ?>" onclick="$$('.fermopoint-new-account, .fermopoint-account').each(function (el) {el.show()});$$('.fermopoint-existing-account,.fermopoint-guest').each(function (el) {el.hide()});" checked="checked" class="radio" /><label for="fermopoint_account:new"><?php echo  $this->__('I did not use Fermo!Point before') ?></label></li>
             </li>
@@ -44,6 +45,12 @@
                 <input type="radio" name="fermopoint_account" id="fermopoint_account:guest" value="guest" title="<?php echo  $this->__('Check out as guest') ?>" onclick="$$('.fermopoint-new-account,.fermopoint-account').each(function (el) {el.hide()});$$('.fermopoint-existing-account,.fermopoint-guest').each(function (el) {el.show()});" class="radio" /><label for="fermopoint_account:guest"><?php echo  $this->__('Delivery as HOST of %s. You will use the service without any registration.', Mage::app()->getStore()->getFrontendName()) ?></label></li>
             </li>
             <?php endif ?>
+            <?php else : ?>
+            <li class="control">
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:guest" value="guest" title="<?php echo  $this->__('Check out as guest') ?>" checked="checked" class="radio" /><label for="fermopoint_account:guest"><?php echo  $this->__('Delivery as HOST of %s. You will use the service without any registration.', Mage::app()->getStore()->getFrontendName()) ?></label></li>
+            </li>
+            <?php endif ?>
+            <?php if ( ! Mage::helper('fpstorepickup/config')->getGuestOnly()) : ?>
             <li class="fields fermopoint-account">
                 <div class="field">
                     <label for="fermopoint_nickname" class="required"><em>*</em><?php echo $this->__('Nickname') ?></label>
@@ -64,6 +71,7 @@
                     </div>
                 </div>
             </li>
+            <?php endif ?>
             <li class="fields">
                 <div class="field">
                     <label for="fermopoint_phone"><?php echo $this->__('Mobile phone') ?></label>
@@ -74,6 +82,7 @@
                 </div>
             </li>
         </ul>
+        <?php if ( ! Mage::helper('fpstorepickup/config')->getGuestOnly()) : ?>
         <div class="fermopoint-account">
             <p class="fermopoint-new-account">
                 <?php echo $this->__('The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point') ?>
@@ -96,6 +105,7 @@
             </div>
             <?php endif ?>
         </div>
+        <?php endif ?>
         <div class="fermopoint-guest" style="display: none;">
             <p class="guest-account" style="display: none;">
                 <?php echo $this->__('You will check out as guest.') ?>
@@ -159,13 +169,14 @@
     Event.observe('fermopoint_search', 'click', function (event) {
         event.preventDefault();
         if ($(this).hasClassName('in-progress')) {
-            alert('<?php echo $this->__('Another search is already running') ?>');
+            //alert('<?php echo $this->__('Another search is already running') ?>');
             return;
         }
             
         fpStorePickup.search($('fermopoint_search_address').value, $('fermopoint_search_radius').value);
     });
     
+    <?php if ( ! Mage::helper('fpstorepickup/config')->getGuestOnly()) : ?>
     Calendar.setup({
         inputField: "fermopoint_dob",
         ifFormat: "<?php echo Mage::app()->getLocale()->getDateStrFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT) ?>",
@@ -174,5 +185,6 @@
         align: "Bl",
         singleClick : true
     });
+    <?php endif ?>
 //]]>
 </script>

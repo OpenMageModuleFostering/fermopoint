@@ -43,7 +43,7 @@ class FermoPoint_StorePickup_Model_Carrier_Storepickup
         if ( ! $result)
             return false;
             
-        $cost = Mage::helper('fpstorepickup/config')->getCost();
+        $cost = Mage::helper('fpstorepickup')->getCost($request);
             
 		$result = Mage::getModel('shipping/rate_result');
 		$method = Mage::getModel('shipping/rate_result_method');

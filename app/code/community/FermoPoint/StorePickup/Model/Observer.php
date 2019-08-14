@@ -68,6 +68,8 @@ class FermoPoint_StorePickup_Model_Observer
         
         $accountType = $request->getPost('fermopoint_account', 'new');
         $config = Mage::helper('fpstorepickup/config');
+        if ($config->getGuestOnly())
+            $accountType = 'guest';
         if ($accountType == 'guest' && $config->getGuestEnabled())
         {
             $isGuest = true;
