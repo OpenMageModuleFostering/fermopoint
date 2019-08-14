@@ -2,6 +2,11 @@
 
 class FermoPoint_StorePickup_Adminhtml_RemoteController extends Mage_Adminhtml_Controller_Action {
 
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('sales/fermopoint');
+    }
+
     public function indexAction()
     {
         if ($this->getRequest()->getQuery('ajax')) {

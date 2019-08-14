@@ -53,9 +53,9 @@ class FermoPoint_StorePickup_Model_Api_SearchData extends Varien_Object {
             'lat' => $this->getLatitude(),
             'lng' => $this->getLongitude(),
             'radius' => $this->getRadius(),
-            'day' => (int) $this->getDay(),
-            'from' => (int) $this->getFrom(),
-            'to' => $this->getTo() ? (int) $this->getTo() : 24,
+            'day' => $this->hasData('day') ? (int) $this->getDay() : null,
+            'from' => $this->hasData('from') ? (int) $this->getFrom() : 0,
+            'to' => $this->hasData('to') ? (int) $this->getTo() : 24,
         );
         
         return $result;
