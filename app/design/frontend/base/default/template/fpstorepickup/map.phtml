@@ -1,0 +1,118 @@
+<?php $tosUrl = $this->getTosUrl() ?>
+<?php $mapId = uniqid() ?>
+<div class="fermopoint">
+    <div id="fermopoint_map">
+        <h3><?php echo $this->__('Search for pick-up points') ?></h3>
+        <p><?php echo $this->__('You are viewing the collection points closest to the address below. If you want, you can enter a different address.') ?></p>
+        <div class="address">
+            <div class="fermopoint-address">
+                <input type="text" id="fermopoint_search_address" value="<?php echo $this->htmlEscape($this->getBillingAddress()) ?>" size="50" />
+                <label for="fermopoint_search_radius"><?php echo $this->__('Radius') ?></label>
+                <select id="fermopoint_search_radius">
+                    <option value="1">1 km</option>
+                    <option value="5">5 km</option>
+                    <option value="10">10 km</option>
+                    <option value="20" selected="selected">20 km</option>
+                    <option value="30">30 km</option>
+                    <option value="50">50 km</option>
+                    <option value="100">100 km</option>
+                </select>
+            </div>
+            <div class="fermopoint-search">
+                <button id="fermopoint_search" class="button"><span><span><?php echo $this->__('Search') ?></span></span></button>
+                <img src="<?php echo $this->getSkinUrl('fermopoint/images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading') ?>" />
+            </div>
+        </div>
+        <div id="fermopoint_google_map<?php echo $mapId ?>" class="fermopoint_google_map"></div>
+    </div>
+    <div id="fermopoint_point" style="display: none;">
+        <input type="hidden" name="fermopoint_point_id" id="fermopoint_point_id" value="0" />
+        <h3><?php echo $this->__('Selected pick-up point') ?></h3>
+        <h5 id="fermopoint_point_name"></h5>
+        <p id="fermopoint_point_address"></p>
+        <ul class="form-list">
+            <li class="control">
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:new" value="new" title="<?php echo  $this->__('I did not use Fermo!Point before') ?>" onclick="$$('.fermopoint-new-account').each(function (el) {el.show()});$$('.fermopoint-existing-account').each(function (el) {el.hide()});" checked="checked" class="radio" /><label for="fermopoint_account:new"><?php echo  $this->__('I did not use Fermo!Point before') ?></label></li>
+            </li>
+            <li class="control">
+                <input type="radio" name="fermopoint_account" id="fermopoint_account:existing" value="existing" title="<?php echo  $this->__('I have used Fermo!Point in the past') ?>" onclick="$$('.fermopoint-new-account').each(function (el) {el.hide()});$$('.fermopoint-existing-account').each(function (el) {el.show()});" class="radio" /><label for="fermopoint_account:existing"><?php echo  $this->__('I have used Fermo!Point in the past') ?></label></li>
+            </li>
+            <li class="fields">
+                <div class="field">
+                    <label for="fermopoint_nickname" class="required"><em>*</em><?php echo $this->__('Nickname') ?></label>
+                    <label for="fermopoint_nickname" class="nick info fermopoint-existing-account" style="display:none;">(<?php echo $this->__('Please enter your Nickname. The nickname will be required at the time of withdrawal of the package') ?>)</label>
+                    <label for="fermopoint_nickname" class="nick info fermopoint-new-account">(<?php echo $this->__('Choose and enter your nickname. The nickname will be required at the time of withdrawal of the package') ?>)</label>
+                    <div class="input-box">
+                        <input type="text" name="fermopoint_nickname" id="fermopoint_nickname" title="<?php echo $this->__('Nickname') ?>" class="input-text required-entry" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="fermopoint_phone"><?php echo $this->__('Mobile phone') ?></label>
+                    <label for="fermopoint_phone" class="phone info">(<?php echo $this->__('Enter your cell phone number for delivery') ?>)</label>
+                    <div class="input-box">
+                        <input type="text" name="fermopoint_phone" id="fermopoint_phone" title="<?php echo $this->__('Mobile phone') ?>" value="<?php echo $this->escapeHtml($this->getUserPhone()) ?>" class="input-text" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="fermopoint-new-account">
+            <?php echo $this->__('The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point') ?>
+        </p>
+        <p class="fermopoint-new-account">
+            <?php echo $this->__('To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point', $this->htmlEscape($this->getUserEmail())) ?>
+        </p>
+        <?php if ( ! empty($tosUrl)) : ?>
+        <div id="fermopoint_conditions" class="fermopoint-new-account">
+            <iframe src="<?php echo $tosUrl ?>">
+                <p><?php echo $this->__('Your browser does not support iframes.') ?></p>
+            </iframe>
+            <div style="clear: both"></div>
+            <p class="checkbox">
+                <input type="checkbox" name="fermopoint_accept_terms" id="fermopoint_accept_terms" value="1" autocomplete="off" class="required-entry" />
+                <label for="fermopoint_accept_terms"><?php echo $this->__('I accept Fermo!Point terms and conditions') ?></label>
+            </p>
+        </div>
+        <?php endif ?>
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+
+    fpStorePickup.initGoogleMap('<?php echo $this->getGoogleMaps() ?>', 'fermopoint_google_map<?php echo $mapId ?>');
+    fpStorePickup.onInit = function () {
+        fpStorePickup.search($('fermopoint_search_address').value, $('fermopoint_search_radius').value);
+    };
+    fpStorePickup.onSearchStart = function () {
+        $('fermopoint_search').addClassName('in-progress').addClassName('disabled');
+    };
+    fpStorePickup.onSearchEnd = function (points, error) {
+        $('fermopoint_search').removeClassName('in-progress').removeClassName('disabled');
+        if (! error && ! points.length)
+            setTimeout(function () {
+                alert('<?php echo $this->__('No points found around given location') ?>');
+            }, 1);
+    };
+    fpStorePickup.onSelectPoint = function (point) {
+        $('fermopoint_point').show();
+        Effect.ScrollTo('fermopoint_point');
+        $('fermopoint_point_id').value = point.id;
+        $('fermopoint_point_name').innerHTML = point.name;
+        $('fermopoint_point_address').innerHTML = point.street
+            + '<br />' + point.postcode
+            + ' ' + point.city
+            + ' ' + point.region
+            //+ ' ' + point.country_id
+        ;
+    };
+    
+    Event.observe('fermopoint_search', 'click', function (event) {
+        event.preventDefault();
+        if ($(this).hasClassName('in-progress')) {
+            alert('<?php echo $this->__('Another search is already running') ?>');
+            return;
+        }
+            
+        fpStorePickup.search($('fermopoint_search_address').value, $('fermopoint_search_radius').value);
+    });
+//]]>
+</script>

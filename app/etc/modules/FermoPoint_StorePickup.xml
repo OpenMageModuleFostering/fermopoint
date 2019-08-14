@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <FermoPoint_StorePickup>
+            <active>true</active>
+            <codePool>community</codePool>
+        </FermoPoint_StorePickup>
+    </modules>
+</config>

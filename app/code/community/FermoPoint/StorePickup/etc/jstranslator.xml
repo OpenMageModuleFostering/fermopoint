@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<jstranslator>
+    <fermopoint-agreement translate="message" module="fpstorepickup">
+        <message>You should accept FermoPoint terms and conditions</message>
+    </fermopoint-agreement>
+    <fermopoint-select-point translate="message" module="fpstorepickup">
+        <message>You should select one of available pick-up points to continue</message>
+    </fermopoint-select-point>
+    <fermopoint-error translate="message" module="fpstorepickup">
+        <message>Error</message>
+    </fermopoint-error>
+    <fermopoint-use-point translate="message" module="fpstorepickup">
+        <message>Select this pick-up point</message>
+    </fermopoint-use-point>
+    <fermopoint-distance translate="message" module="fpstorepickup">
+        <message>Distance</message>
+    </fermopoint-distance>
+    <fermopoint-category translate="message" module="fpstorepickup">
+        <message>Category</message>
+    </fermopoint-category>
+    <fermopoint-contact translate="message" module="fpstorepickup">
+        <message>Contact Person</message>
+    </fermopoint-contact>
+    <fermopoint-hours translate="message" module="fpstorepickup">
+        <message>Hours</message>
+    </fermopoint-hours>
+</jstranslator>

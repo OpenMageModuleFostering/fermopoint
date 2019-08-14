@@ -1,0 +1,44 @@
+<?php $credits = $this->getCredits() ?>
+<?php if ($credits !== false) : ?>
+<div class="box-left">
+    <div class="entry-edit">
+        <div class="entry-edit-head"><h4><?php echo $this->__('Credits') ?></h4></div>
+        <fieldset class="a-center bold">
+            <span class="nowrap" style="font-size:18px;"><span class="price"><?php echo $credits ?></span><span style="font-size:14px; color:#686868;"></span></span>
+        </fieldset>
+    </div>
+</div>
+<div class="box-right">
+    <div class="entry-edit">
+        <div class="entry-edit-head"><h4><?php echo $this->__('Statistics') ?></h4></div>
+            <fieldset class="np">
+                <div class="grid np">
+                    <table cellspacing="0" style="border:0;" id="ordersCountTable">
+                        <colgroup>
+                            <col>
+                            <col width="100">
+                            <col width="100">
+                        </colgroup>
+                        <thead>
+                            <tr class="headings">
+                                <th class=" no-link"><span class="nobr"><?php echo $this->__('Status') ?></span></th>
+                                <th class=" no-link last"><span class="nobr"><?php echo $this->__('Count') ?></span></th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                        <?php foreach ($this->getOrders() as $idx => $row) : ?>
+                        <tr class="<?php echo $idx %2 ? 'even' : 'odd' ?>">
+                            <td class=" "><?php echo $this->__($row['state']) ?></td>
+                            <td class="a-right a-right last"><?php echo $this->__($row['count']) ?></td>
+                        </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="clear"></div>
+<?php else : ?>
+<div id="messages"><ul class="messages"><li class="error-msg"><ul><li><span><?php echo $this->__('Service is not available at the moment, please try again later') ?></span></li></ul></li></ul></div>
+<?php endif ?>

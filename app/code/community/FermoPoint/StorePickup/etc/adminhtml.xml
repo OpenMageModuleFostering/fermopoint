@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <sales translate="title" module="sales">
+            <children>
+                <fermopoint translate="title" module="fpstorepickup">
+                    <title>Fermo!Point</title>
+                    <children>
+                        <orders translate="title" module="fpstorepickup">
+                            <title>All Orders</title>
+                            <action>fpstorepickupadmin/adminhtml_remote/index</action>
+                            <sort_order>100</sort_order>
+                        </orders>
+                    </children>
+                    <sort_order>1000</sort_order>
+                </fermopoint>
+            </children>
+        </sales>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <sales>
+                        <children>
+                            <fermopoint>
+                                <title>Fermo!Point Management</title>
+                            </fermopoint>
+                        </children>
+                    </sales>
+                </children>
+            </admin>
+        </resources>
+    </acl>    
+</config>

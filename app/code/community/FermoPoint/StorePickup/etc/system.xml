@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <carriers>
+            <groups>
+                <fpstorepickup translate="label" module="fpstorepickup">
+                    <label>FermoPoint</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>12</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <configuration_manual translate="label">
+                            <label></label>
+                            <frontend_model>fpstorepickup/adminhtml_configuration_manual</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </configuration_manual>
+                        <accept translate="label comment">
+                            <label>Accept TOS</label>
+                            <comment><![CDATA[I accept <a href="https://www.fermopoint.it/termini-merchant/" target="_blank">FermoPoint Terms of Service</a>]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </accept>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </active>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </title>	
+                        
+                        <client_id translate="label">
+                            <label>Client ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </client_id>	
+                        <client_secret translate="label">
+                            <label>Client Secret</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </client_secret>
+                        <sandbox translate="label">
+                            <label>Sandbox</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </sandbox>
+                        <debug translate="label">
+                            <label>Debug</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>23</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </debug>
+                        
+                        <cost translate="label">
+                            <label>Cost</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </cost>	
+                        <maximum_subtotal translate="label">
+                            <label>Maximum Subtotal</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>31</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </maximum_subtotal>	
+                        <maximum_weight translate="label">
+                            <label>Maximum Weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>32</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </maximum_weight>	
+                        
+                        <tos_url translate="label comment">
+                            <label>Terms and Conditions Url</label>
+                            <frontend_type>text</frontend_type>
+                            <!--frontend_model>fpstorepickup/adminhtml_configuration_disabled</frontend_model-->
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                            <comment>Optional, use to show some TOS in iframe</comment>
+                        </tos_url>	
+                        <gmaps_key translate="label comment">
+                            <label>Google Maps API Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Optional, use for high load only</comment>
+                            <depends><accept>1</accept></depends>
+                        </gmaps_key>	
+						
+                        <allowspecific_payment translate="label">
+                            <label>Applicable payments</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>100</sort_order>
+							<source_model>fpstorepickup/source_selectorpayment</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept></depends>
+                        </allowspecific_payment>
+						
+                        <specificpayment translate="label comment">
+                            <label>Specific payments</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>110</sort_order>
+                            <source_model>fpstorepickup/source_payment</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><accept>1</accept><allowspecific_payment>1</allowspecific_payment></depends>
+                            <comment>Warning! Do not select "Cash on Delivery" methods, as we do not support them</comment>
+                        </specificpayment>	
+						
+					</fields>
+                </fpstorepickup>
+            </groups>
+        </carriers>
+    </sections>
+</config>

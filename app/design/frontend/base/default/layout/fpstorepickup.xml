@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+	<checkout_onepage_index>
+        <reference name="head">
+            <action method="addJs"><script>fermopoint/markerclusterer.js</script></action>
+            <action method="addJs"><script>fermopoint/storepickup.js</script></action>
+			<action method="addItem"><type>skin_css</type><name>fermopoint/css/storepickup.css</name></action>
+        </reference>
+		<!--reference name="checkout.onepage.billing">
+			<action method="setTemplate"><template>fpstorepickup/checkout/onepage/billing.phtml</template></action>
+		</reference-->		
+	</checkout_onepage_index>	
+	
+</layout> 

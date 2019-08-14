@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/fermopoint",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "Fermo!Points",
+    "authors": [
+    {
+        "name": "Fermo!Point",
+        "email": "support@fermopoint.it"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

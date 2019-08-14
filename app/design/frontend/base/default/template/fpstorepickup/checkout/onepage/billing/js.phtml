@@ -1,0 +1,21 @@
+<script type="text/javascript">
+//<![CDATA[
+    var fpStorePickup = new FermopointStorePickup(
+        '<?php echo Mage::helper('fpstorepickup')->getChangeMethodUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getSearchUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getMediaUrl(); ?>'
+    );
+
+    Event.observe('billing:use_for_shipping_point', 'click', function(event){
+        fpStorePickup.setUseStorePickup(true);
+    });
+
+    Event.observe('billing:use_for_shipping_yes', 'click', function(event){
+        fpStorePickup.setUseStorePickup(false);
+    });
+
+    Event.observe('billing:use_for_shipping_no', 'click', function(event){
+        fpStorePickup.setUseStorePickup(false);
+    });
+//]]>
+</script>

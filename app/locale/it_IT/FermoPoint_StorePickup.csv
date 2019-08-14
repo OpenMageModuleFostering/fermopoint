@@ -1,0 +1,53 @@
+Fermo!Point,Fermo!Point
+Title,Titolo
+Cost,Costo
+Maximum Subtotal,Subtotale Massimo
+Maximum Weight,Peso Massimo
+Terms and Conditions Url,Url Termini e Condizioni
+Google Maps API Key,Chiave API Google Maps
+Applicable payments,Pagamenti Applicabili
+Point,Punto
+Please specify Merchant ID,Specificare il Merchant ID
+Please specify API Key,Specificare l´API Key
+Could not communicate with server,Impossibile comunicare col server
+Invalid server reply,Risposta server non valida
+Could not submit order,Non è stato possibile inviare l´ordine.
+All Allowed Payments,Tutti i Pagamenti Consentiti
+Specific Payments,Specifici Pagamenti
+Invalid search parameters.,Parametri di ricerca non validi.
+Error while communicating with Fermo!Point. Please retry later.,Si è verificato un errore durante la comunicazione con Fermo!Point. Riprovare a breve.
+Location does not found,Location non trovata
+Your browser does not support iframes.,Il tuo browser non supporta gli iframe.
+Loading,Caricando
+No points found around given location,Non è stato trovato alcun negozio Fermo!Point nelle vicinanze dell´indirizzo inserito. Prova ad aumentare il raggio di ricerca.
+Another search is already running,Vi è  già un´altra ricerca in corso.
+You should accept Fermo!Point terms and conditions,E´ necessario accettare i termini e condizioni Fermo!Point
+Distance,Distanza
+Selected pick-up point,Hai selezionato il seguente punto di ritiro
+You should select one of available pick-up points to continue,Selezionare un punto di ritiro dalla mappa prima di continuare
+Select this pick-up point,Seleziona questo punto di ritiro
+Radius,Raggio
+Fermo!Point Store Pickup,"Ricevi il tuo acquisto in uno dei punti di ritiro Fermo!Point (<a target=""_blank"" href=""http://www.fermopoint.it/"">www.fermopoint.it</a>)"
+I accept Fermo!Point terms and conditions,Utilizzando il servizio si accetta il Contratto
+Search for pick-up points,Cerca un punto di ritiro
+"You are viewing the collection points closest to the address below. If you want, you can enter a different address.","Stai visualizzando i punti di ritiro vicini al seguente indirizzo. <br/>Se vuoi, puoi inserire un indirizzo differente."
+"I accept <a href=""http://www.fermopoint.it/termini-merchant/"" target=""_blank"">Fermo!Point Terms of Service</a>","Accetto <a href=""http://www.fermopoint.it/termini-merchant/"" target=""_blank"">Fermo!Point Termini di Servizio</a>"
+Accept TOS,Accettare Termini di Servizio
+Fermo!Point Point,Fermo!Point Point
+"For all the information on installing and configuring the module and Fermo!Point Merchant Account, you can refer to <a href=""%s"" target=""_blank"">this page</a>","Per tutte le informazioni sull´installazione e la configurazione del modulo e Fermo!Point Merchant Account, è possibile fare riferimento a <a href=""%s"" target=""_blank"">questa pagina</a>"
+Hours,Orari
+"Warning! Do not select ""Cash on Delivery"" methods, as we do not support them","Attenzione! Non selezionare il contrassegno come metodo di pagamento compatibile, la merce non verrà ritirata"
+Contact Person,Referente
+Category,Categoria
+I did not use Fermo!Point before,E´ la prima volta che uso Fermo!Point
+I have used Fermo!Point in the past,Ho gi&agrave; utilizzato Fermo!Point
+User with this nickname already exists,Nickname già in uso. Scieglierne un altro.
+Mobile phone,Cellulare
+Please enter your Nickname. The nickname will be required at the time of withdrawal of the package,Inserisci il tuo Nickname. Il Nickname ti verr&agrave; richiesto al momento del ritiro del pacco
+Choose and enter your nickname. The nickname will be required at the time of withdrawal of the package,Scegli e inserisci il tuo Nickname. Il Nickname ti verr&agrave; richiesto al momento del ritiro del pacco
+Enter your cell phone number for delivery,Inserire se si vuole ricevere la notifica dell´arrivo del pacco tramite SMS
+There is no user with this nickname,Il Nickname inserito non risulta associato ad alcun utente.
+All Orders,Tutte le Transazioni
+"Service is not available at the moment, please try again later","Servizio al momento non disponibile"
+"The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point","I dati di fatturazione saranno comunicati a Fermo!Point per la registrazione del nuovo account e l'utenza potrà essere utilizzata in futuro su qualsiasi altro sito eCommerce che integra il servizio Fermo!Point"
+"To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point","All’indirizzo email specificato nei dati di fatturazione <b>%s</b> riceverete un’email con le credenziali di accesso al portale Fermo!Point"
