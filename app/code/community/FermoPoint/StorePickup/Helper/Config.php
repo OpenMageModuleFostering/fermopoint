@@ -3,7 +3,7 @@
 class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
 {
 
-    const API_VERSION = '1.1';
+    const API_VERSION = '1.2';
     
     const ENDPOINT_PRODUCTION = 'http://api.fermopoint.it/api/v:api_version/:api_method';
     const ENDPOINT_SANDBOX = 'http://sandbox.fermopoint.it/api/v:api_version/:api_method';
@@ -77,7 +77,7 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
         return explode(',', Mage::getStoreConfig(self::XML_PATH_SPECIFICPAYMENTS));
     }
     
-    public function getClientSecret($store_id)
+    public function getClientSecret($store_id = 0)
     {
         return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTSECRET, $store_id);
     }

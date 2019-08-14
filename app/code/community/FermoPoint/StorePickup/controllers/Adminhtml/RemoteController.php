@@ -9,6 +9,14 @@ class FermoPoint_StorePickup_Adminhtml_RemoteController extends Mage_Adminhtml_C
 
     public function indexAction()
     {
+        if (!$this->getRequest()->getParam('website')) {
+            $websites = Mage::app()->getWebsites();
+            foreach ($websites as $websiteId => $website) {
+                $this->_redirect('*/*/*', array('website' => $websiteId));
+                return;
+                break;
+            }
+        }
         if ($this->getRequest()->getQuery('ajax')) {
             $this->_forward('grid');
             return;

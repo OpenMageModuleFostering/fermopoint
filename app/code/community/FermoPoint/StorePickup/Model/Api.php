@@ -54,12 +54,14 @@ class FermoPoint_StorePickup_Model_Api {
 
     public function call($method, $data = array(), $params = array())
     {
-        if ($method == 'orders') {
+        if ($method == 'orders' ||
+            $method == 'merchant' ) {
             $website = Mage::app()->getRequest()->getParam('website', null);
-            if (!$website) {
-                return array();
+            if ($website) {
+                $store_id = Mage::app()->getWebsite($website)->getDefaultStore()->getId();
+            } else {
+                $store_id = Mage::app()->getStore()->getStoreId();
             }
-            $store_id = Mage::app()->getWebsite($website)->getDefaultStore()->getId();
         } else {
             $store_id = Mage::app()->getStore()->getStoreId();
         }

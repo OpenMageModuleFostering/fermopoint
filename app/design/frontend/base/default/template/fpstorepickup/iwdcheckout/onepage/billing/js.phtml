@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    //<![CDATA[
+
+    var fpStorePickup = new FermopointStorePickup(
+        '<?php echo Mage::helper('fpstorepickup')->getChangeMethodUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getSearchUrl(); ?>',
+        '<?php echo Mage::helper('fpstorepickup')->getMediaUrl(); ?>',
+        function (point) {
+            var days = [];
+            for (var i = 0; i < point.hours.length; i++) {
+                days.push('<span class="dow">' + point.hours[i].day + '</span>' + point.hours[i].hours.join(', '));
+            }
+            return '<div class="fermopoint-info-window">' +
+                '<div class="fermopoint-info-row title">' + point.name + '</div>' +
+                '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + point.id + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>' +
+                '<div class="fermopoint-info-row"></div>' +
+                '<div class="fermopoint-info-row address">' + point.street + ', ' + point.city + ', ' + point.postcode + ', ' + point.region + '</div>' +
+                '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
+                '<div class="fermopoint-info-row hours"><div class="hours-list">' + days.join('<br />') + '</div></div></div>';
+        }
+    );
+
+    Event.observe('billing:use_for_shipping_yes', 'click', function(event){
+        fpStorePickup.setUseStorePickup(false, function (flag) {
+            IWD.OPC.Checkout.reloadShippingsPayments();
+        });
+    });
+
+    Event.observe('billing:use_for_shipping_point', 'click', function(event){
+        fpStorePickup.setUseStorePickup(true, function (flag) {
+            IWD.OPC.Checkout.reloadShippingsPayments();
+        });
+    });
+
+    document.observe('click', function(event) {
+        var _element = $(Event.element(event));
+        if(_element.id == 'fermopoint_accept_terms'){
+            IWD.OPC.Checkout.reloadShippingsPayments();
+        }
+    });
+
+    //]]>
+</script>

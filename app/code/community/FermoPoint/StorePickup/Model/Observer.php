@@ -90,6 +90,18 @@ class FermoPoint_StorePickup_Model_Observer
         $controller = $observer->getEvent()->getControllerAction();
         $this->_onSaveShippingMethodBefore($controller, array($this, '_muteError'));
     }
+
+    public function onIwdSaveOrderBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_returnIwdError'));
+    }
+    
+    public function onIwdSaveShippingMethodBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_muteError'));
+    }
         
     protected function _onSaveShippingMethodBefore($controller, $callback)
     {
@@ -305,6 +317,23 @@ class FermoPoint_StorePickup_Model_Observer
         $html .= $block->getLayout()->createBlock('fpstorepickup/amCheckout_billing_js')->toHtml();
         $transport->setHtml($html);
     }
+
+    protected function _insertIwdcheckoutRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        $html = $transport->getHtml();
+
+        if ( ! preg_match('#(<ul>.+?use_for_shipping.+?)</ul>#ius', $html, $matches))
+            return;
+
+        $html = str_replace(
+            $matches[1],
+            $matches[1] . $block->getLayout()->createBlock('fpstorepickup/iwdCheckout_billing_radio')->toHtml(),
+            $html
+        );
+
+        $html .= $block->getLayout()->createBlock('fpstorepickup/iwdCheckout_billing_js')->toHtml();
+        $transport->setHtml($html);
+    }
     
     protected function _insertIdevCheckoutCheckbox(Mage_Core_Block_Abstract $block, Varien_Object $transport)
     {
@@ -414,6 +443,9 @@ class FermoPoint_StorePickup_Model_Observer
             case 'onestepcheckout/onestepcheckout':
                 $this->_insertMagestoreCheckoutRadioJs($block, $event->getTransport());
                 $this->_changeMapsLibraries($block, $event->getTransport());
+                break;
+            case 'opc/onepage_billing':
+                $this->_insertIwdcheckoutRadioJs($block, $event->getTransport());
                 break;
         }
     }

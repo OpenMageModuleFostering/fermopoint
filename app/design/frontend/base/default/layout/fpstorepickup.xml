@@ -20,6 +20,10 @@
     <onestepcheckout_index_index>
         <update handle="fermopoint_scripts" />
 	</onestepcheckout_index_index>
+
+    <opc_index_index>
+        <update handle="fermopoint_scripts" />
+    </opc_index_index>
     
     <firecheckout_index_index>
         <update handle="fermopoint_scripts" />
