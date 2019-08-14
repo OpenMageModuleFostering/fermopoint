@@ -395,7 +395,7 @@ FermopointStorePickup.prototype = {
         document.body.appendChild(script);
     },
 	
-	setUseStorePickup: function(flag)
+	setUseStorePickup: function(flag, callback)
 	{
 		var url = this.changeMethodUrl;	
 		
@@ -407,6 +407,12 @@ FermopointStorePickup.prototype = {
 		var request = new Ajax.Request(url, {
             method: 'get', 
             onSuccess: function () {
+                try {
+                    if (typeof callback === 'function')
+                        callback.apply(this, [flag]);
+                } catch (e) {
+                    
+                }
                 try {
                     var url = flag ? checkout.urls.billing_address : checkout.urls.shipping_address,
                     sections = FireCheckout.Ajax.getSectionsToUpdate('shipping');

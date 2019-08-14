@@ -1,0 +1,35 @@
+<script type="text/javascript">
+//<![CDATA[
+    ;(function () {
+        var oldHandler = oscPlaceOrder;
+        function validateFpOsc() {
+            var methods;
+            var pointId;
+            methods = document.getElementsByName('shipping_method');
+            for (var i=0; i<methods.length; i++) {
+                if (methods[i].checked && methods[i].value !== 'fpstorepickup_fpstorepickup') {
+                    return true;
+                }
+            }
+            
+            pointId = parseInt($('fermopoint_point_id').value, 10);
+            if (pointId <= 0) {
+                alert(Translator.translate('You should select one of available pick-up points to continue').stripTags());
+                return false;
+            }
+            
+            return true;
+        }
+        
+        oscPlaceOrder = function (element) {
+            var validator = new Validation('one-step-checkout-form');
+            var form = $('one-step-checkout-form');
+            
+            if (validator.validate() && validateFpOsc()) {
+                return oldHandler.apply(window, arguments);
+            }
+            return false;
+        }
+    })();
+//]]>
+</script>

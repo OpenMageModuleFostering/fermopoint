@@ -17,6 +17,10 @@
         <update handle="fermopoint_scripts" />
 	</checkout_onepage_index>	
     
+    <onestepcheckout_index_index>
+        <update handle="fermopoint_scripts" />
+	</onestepcheckout_index_index>
+    
     <firecheckout_index_index>
         <update handle="fermopoint_scripts" />
         <reference name="head">

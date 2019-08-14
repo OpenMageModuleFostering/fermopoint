@@ -232,12 +232,50 @@ class FermoPoint_StorePickup_Model_Observer
         $transport->setHtml($html);
     }
     
+    protected function _insertMagestoreCheckoutRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        if ($block->getNameInLayout() != 'onestepcheckout_billing')
+            return;
+        $html = $transport->getHtml();
+        
+        $radio = $block->getLayout()->createBlock('fpstorepickup/magestoreCheckout_billing_radio');
+        if (preg_match('#(<li class="shipping_other_address">.+?</li>)#ius', $html, $matches))
+        {
+            $html = str_replace(
+                $matches[1], 
+                $radio->toHtml() . $matches[1], 
+                $html
+            );
+        }
+        else
+        {
+            $radio->setUseWrapper(true);
+            $html = str_replace(
+                '</fieldset>', 
+                '</fieldset>' . $radio->toHtml(), 
+                $html
+            );
+        }
+        $html .= $block->getLayout()->createBlock('fpstorepickup/magestoreCheckout_billing_js')->toHtml();
+        $transport->setHtml($html);
+    }
+    
     protected function _insertMap(Mage_Core_Block_Abstract $block, Varien_Object $transport)
     {
         if ( ! Mage::helper('fpstorepickup')->getIsOneStepCheckout())
             return;
         $html = $transport->getHtml();
         $html .= $block->getLayout()->createBlock('fpstorepickup/map')->setInitiallyHidden(true)->toHtml();
+        $transport->setHtml($html);
+    }
+    
+    protected function _changeMapsLibraries(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+        if ($block->getNameInLayout() != 'onestepcheckout')
+            return;
+        $html = $transport->getHtml();
+        $html = str_replace('libraries=places', 'libraries=places,geometry', $html);
+        $html .= $block->getLayout()->createBlock('fpstorepickup/magestoreCheckout_js')->toHtml();
         $transport->setHtml($html);
     }
     
@@ -262,6 +300,10 @@ class FermoPoint_StorePickup_Model_Observer
                 break;
             case 'checkout/onepage_shipping_method_additional':
                 $this->_insertMap($block, $event->getTransport());
+                break;
+            case 'onestepcheckout/onestepcheckout':
+                $this->_insertMagestoreCheckoutRadioJs($block, $event->getTransport());
+                $this->_changeMapsLibraries($block, $event->getTransport());
                 break;
         }
     }

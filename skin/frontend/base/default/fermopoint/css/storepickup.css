@@ -100,3 +100,7 @@
 .firecheckout-index-index .fermopoint-info-window { font-size: 11px; line-height: 14px;}
 .firecheckout-index-index .fermopoint-info-window .fermopoint-info-row.title {font-size: 12px; margin-bottom: 5px;}
 .firecheckout-index-index .fermopoint-info-window .fermopoint-info-row a {font-size: 12px;}
+
+.onestepcheckout-index-index .address-information .shipping_other_address + .shipping_other_address {margin-top: 0;}
+
+.onestepcheckout-index-index #fermopoint_point label {max-width: 90%; float:left;}

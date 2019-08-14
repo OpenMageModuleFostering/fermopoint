@@ -1,0 +1,16 @@
+<?php if ($this->getUseWrapper()) : ?>
+<ul>
+<?php endif ?>
+    <li class="shipping_other_address">
+        <div class="input-box input-different-shipping checkbox-group">
+            <input onclick="useStorePickup(this);" type="checkbox" name="shipping[use_store_pickup]" id="shipping:use_store_pickup" value="1" <?php if (Mage::helper('fpstorepickup')->getUseMethod()) : ?> checked="checked" <?php endif ?> />
+            <label for="shipping:use_store_pickup" class="label--checkbox">
+                <span class="check"></span>
+                <span class="box-check"></span>
+                <?php echo $this->__('Fermo!Point Store Pickup'); ?>
+            </label>
+        </div>
+    </li>	
+<?php if ($this->getUseWrapper()) : ?>
+</ul>
+<?php endif ?>
