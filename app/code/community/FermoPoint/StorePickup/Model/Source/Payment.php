@@ -4,7 +4,10 @@ class FermoPoint_StorePickup_Model_Source_Payment
 {
     public function toOptionArray()
 	{
-		$collection = Mage::getModel('payment/config')->getActiveMethods();
+        $website = Mage::getSingleton('adminhtml/config_data')->getWebsite();
+        $website_id = Mage::getModel('core/website')->load($website)->getId();
+        $store_id = Mage::app()->getWebsite($website_id)->getDefaultStore()->getId();
+		$collection = Mage::getModel('payment/config')->getActiveMethods($store_id);
 		
 		if ( ! count($collection))
 			return;

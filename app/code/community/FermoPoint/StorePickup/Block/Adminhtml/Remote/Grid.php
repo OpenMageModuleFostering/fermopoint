@@ -13,6 +13,7 @@ class FermoPoint_StorePickup_Block_Adminhtml_Remote_Grid extends Mage_Adminhtml_
         $this->setUseAjax(true);
         $this->setDefaultSort('order_id');
         $this->setSaveParametersInSession(true);
+        $this->setFilterVisibility(false);
     }
     
     protected function _createCollection()
@@ -128,6 +129,11 @@ class FermoPoint_StorePickup_Block_Adminhtml_Remote_Grid extends Mage_Adminhtml_
     public function getRowUrl($row)
     {
         return 'javascript:void()';
+    }
+
+    public function getMainButtonsHtml()
+    {
+        return '';
     }
 
 }

@@ -52,9 +52,9 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfigFlag(self::XML_PATH_ACCEPT);
     }
     
-    public function getClientId()
+    public function getClientId($store_id)
     {
-        return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTID);
+        return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTID, $store_id);
     }
     
     public function getGuestNickname()
@@ -77,9 +77,9 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
         return explode(',', Mage::getStoreConfig(self::XML_PATH_SPECIFICPAYMENTS));
     }
     
-    public function getClientSecret()
+    public function getClientSecret($store_id)
     {
-        return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTSECRET);
+        return (string) Mage::getStoreConfig(self::XML_PATH_CLIENTSECRET, $store_id);
     }
     
     public function isSandbox()

@@ -10,6 +10,8 @@ class FermoPoint_StorePickup_Block_Adminhtml_Remote extends Mage_Adminhtml_Block
         $this->_headerText = Mage::helper('fpstorepickup')->__('All Orders');
         parent::__construct();
         $this->removeButton('add');
+        $this->removeButton('search');
+        $this->removeButton('reset');
     }
 
 }

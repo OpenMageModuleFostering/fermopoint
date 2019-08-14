@@ -54,8 +54,17 @@ class FermoPoint_StorePickup_Model_Api {
 
     public function call($method, $data = array(), $params = array())
     {
+        if ($method == 'orders') {
+            $website = Mage::app()->getRequest()->getParam('website', null);
+            if (!$website) {
+                return array();
+            }
+            $store_id = Mage::app()->getWebsite($website)->getDefaultStore()->getId();
+        } else {
+            $store_id = Mage::app()->getStore()->getStoreId();
+        }
         $config = Mage::helper('fpstorepickup/config');
-        $signedData = $this->_signData($data, $config->getClientId(), $config->getClientSecret());
+        $signedData = $this->_signData($data, $config->getClientId($store_id), $config->getClientSecret($store_id));
         $this->_debug($signedData);
         
         $client = new Zend_Http_Client($this->_buildUrl($config->getEndpointUrl($method), $params));
