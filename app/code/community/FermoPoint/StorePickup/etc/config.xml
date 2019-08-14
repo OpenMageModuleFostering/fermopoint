@@ -146,13 +146,13 @@
     </frontend>
     <admin>
         <routers>
-            <fpstorepickup>
+            <fpstorepickupadmin>
                 <use>admin</use>
                 <args>
                     <module>FermoPoint_StorePickup</module>
                     <frontName>fpstorepickupadmin</frontName>
                 </args>
-            </fpstorepickup>
+            </fpstorepickupadmin>
         </routers>
     </admin>
     <adminhtml>

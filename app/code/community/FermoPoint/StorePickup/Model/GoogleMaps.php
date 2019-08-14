@@ -2,7 +2,7 @@
 
 class FermoPoint_StorePickup_Model_GoogleMaps
 {
-	const GEOCODER_URL = 'http://maps.google.com/maps/api/geocode/json?';
+	const GEOCODER_URL = 'https://maps.google.com/maps/api/geocode/json?';
 	const STATUS_OK = 'ok';
     
     const CACHE_TAG = 'fermopoint_gmaps';

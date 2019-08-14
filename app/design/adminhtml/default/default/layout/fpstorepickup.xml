@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <layout>
-    <fpstorepickup_adminhtml_remote_index>
+    <fpstorepickupadmin_adminhtml_remote_index>
         <referense name="head">
             <action method="setTitle" translate="title"><title>All Orders</title></action>
         </referense>
@@ -13,10 +13,10 @@
                 <block type="fpstorepickup/adminhtml_remote" name="admin.fermopoint.remote"/>
             </block>
         </reference>
-    </fpstorepickup_adminhtml_remote_index>
-    <fpstorepickup_adminhtml_remote_grid>
+    </fpstorepickupadmin_adminhtml_remote_index>
+    <fpstorepickupadmin_adminhtml_remote_grid>
         <block type="core/text_list" name="root" output="toHtml">
             <block type="fpstorepickup/adminhtml_remote_grid" name="admin.fermopoint.remote.grid"/>
         </block>
-    </fpstorepickup_adminhtml_remote_grid>
+    </fpstorepickupadmin_adminhtml_remote_grid>
 </layout>
