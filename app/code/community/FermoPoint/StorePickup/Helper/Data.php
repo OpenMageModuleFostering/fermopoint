@@ -149,8 +149,12 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
         $dateObj->setMinute(00);
         $dateObj->setSecond(00);
 
-        //set date with applying timezone of store
-        $dateObj->set($date, Zend_Date::DATE_SHORT, $locale->getLocaleCode());
+        try {
+            //set date with applying timezone of store
+            $dateObj->set($date, Zend_Date::DATE_SHORT, $locale->getLocaleCode());
+        } catch (Exception $e) {
+            return null;
+        }
 
         //convert store date to default date in UTC timezone without DST
         //$dateObj->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE);

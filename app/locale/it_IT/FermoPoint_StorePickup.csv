@@ -55,3 +55,5 @@ All Orders,Tutte le Transazioni
 "Create shipments automatically after invoicing","Crea automaticamente la spedizione a seguito della fatturazione"
 "Delivery as HOST of %s. You will use the service without any registration.","Prenota la consegna come ospite di %s. Utilizzerai il servizio senza doverti registrare."
 "There is no user with given nickname and date of birth","La coppia nickname / data di nascita non sembra essere corretta"
+"Enter your birth date %s","Inserisci la tua data di nascita %s"
+"Invalid Date of Birth","Invalid data di nascita"

@@ -54,7 +54,7 @@
                 </div>
                 <div class="field">
                     <label for="fermopoint_dob" class="required"><em>*</em><?php echo $this->__('Date of Birth') ?></label>
-                    <label for="fermopoint_dob" class="dob info">(<?php echo $this->__('Enter your birth date') ?>)</label>
+                    <label for="fermopoint_dob" class="dob info">(<?php echo $this->__('Enter your birth date %s', strtolower(Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT))) ?>)</label>
                     <div class="input-box">
                         <input type="text" name="fermopoint_dob" id="fermopoint_dob" title="<?php echo $this->__('Date of Birth') ?>" value="<?php echo $this->escapeHtml($this->getUserDob()) ?>" class="input-text required-entry" />
                         <img class="ajax-validate" src="<?php echo $this->getSkinUrl('fermopoint/images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading') ?>" />
