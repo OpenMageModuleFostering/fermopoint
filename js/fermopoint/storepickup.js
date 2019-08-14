@@ -86,13 +86,13 @@ FermopointStorePickup.prototype = {
         }
         this.infoWindow.setContent(
             '<div class="fermopoint-info-window">' +
-            '<div class="row title">' + point.name + '</div>' +
-            '<div class="row"></div>' +
-            '<div class="row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
-            '<div class="row contact"><strong>' + Translator.translate('Contact') + ': </strong>' + point.contact + '</div>'+
-            '<div class="row category"><strong>' + Translator.translate('Category') + ': </strong>' + point.category + '</div>'+
-            '<div class="row hours"><!--strong>' + Translator.translate('Hours') + ': </strong--><div class="hours-list">' + days.join('<br />') + '</div></div>'+
-            '<div class="row select"><a class="fermopoint-select-me" rel="' + idx + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>'
+            '<div class="fermopoint-info-row title">' + point.name + '</div>' +
+            '<div class="fermopoint-info-row"></div>' +
+            '<div class="fermopoint-info-row distance"><strong>' + Translator.translate('Distance') + ': </strong>' + point.distance + ' km </div>' +
+            '<div class="fermopoint-info-row contact"><strong>' + Translator.translate('Contact') + ': </strong>' + point.contact + '</div>'+
+            '<div class="fermopoint-info-row category"><strong>' + Translator.translate('Category') + ': </strong>' + point.category + '</div>'+
+            '<div class="fermopoint-info-row hours"><!--strong>' + Translator.translate('Hours') + ': </strong--><div class="hours-list">' + days.join('<br />') + '</div></div>'+
+            '<div class="fermopoint-info-row select"><a class="fermopoint-select-me" rel="' + idx + '" href="#">' + Translator.translate('Select this pick-up point') + '</a></div>'
         );
         this.infoWindow.open(this.map, marker);  
     },

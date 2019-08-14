@@ -5,7 +5,7 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
 
     const API_VERSION = '0.9';
     
-    const ENDPOINT_PRODUCTION = 'http://api.fermopoint.it/api/:api_version/:api_method';
+    const ENDPOINT_PRODUCTION = 'http://api.fermopoint.it/api/v:api_version/:api_method';
     const ENDPOINT_SANDBOX = 'http://sandbox.fermopoint.it/api/v:api_version/:api_method';
 
     const XML_PATH_ACCEPT = 'carriers/fpstorepickup/accept';

@@ -48,23 +48,23 @@
     min-width: 300px;
 }
 
-.fermopoint-info-window .row {
+.fermopoint-info-window .fermopoint-info-row {
     margin: 5px 0;
 }
 
-.fermopoint-info-window .row.title {
+.fermopoint-info-window .fermopoint-info-row.title {
     color: #457085;
     text-transform: capitalize;
     font-size: 16px;
     margin-bottom: 15px;
 }
 
-.fermopoint-info-window .row strong {
+.fermopoint-info-window .fermopoint-info-row strong {
     color: grey !important;
     font-weight: 400 !important;
 }
 
-.fermopoint-info-window .row a {
+.fermopoint-info-window .fermopoint-info-row a {
     margin-top: 7px;
     float: left;
     color: #9bae1d;
