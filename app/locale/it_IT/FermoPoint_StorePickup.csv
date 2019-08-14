@@ -51,3 +51,5 @@ All Orders,Tutte le Transazioni
 "Service is not available at the moment, please try again later","Servizio al momento non disponibile"
 "The billing information will be disclosed to Fermo!Point to register the new account and the user will be used in the future on any other site that integrates eCommerce service Fermo!Point","I dati di fatturazione saranno comunicati a Fermo!Point per la registrazione del nuovo account e l'utenza potrà essere utilizzata in futuro su qualsiasi altro sito eCommerce che integra il servizio Fermo!Point"
 "To the email address specified in the billing information <b>%s</ b> will receive an email with your login credentials to the portal Fermo!Point","All’indirizzo email specificato nei dati di fatturazione <b>%s</b> riceverete un’email con le credenziali di accesso al portale Fermo!Point"
+"Auto Ship","Spedizione automatica"
+"Create shipments automatically after invoicing","Crea automaticamente la spedizione a seguito della fatturazione"

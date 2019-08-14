@@ -2,7 +2,7 @@
 <config>
     <modules>
         <FermoPoint_StorePickup>
-            <version>1.0.6</version>
+            <version>1.1.0</version>
         </FermoPoint_StorePickup>
     </modules>
     <global>
@@ -60,6 +60,24 @@
             </fpstorepickup_read>
         </resources>
         <events>
+            <sales_order_shipment_save_before>
+                <observers>
+                    <fermopoint_storepickup_observer>
+                        <type>singleton</type>
+                        <class>fpstorepickup/observer</class>
+                        <method>onShipmentSaveBefore</method>
+                    </fermopoint_storepickup_observer>
+                </observers>
+            </sales_order_shipment_save_before>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <fermopoint_storepickup_observer>
+                        <type>singleton</type>
+                        <class>fpstorepickup/observer</class>
+                        <method>onShipmentSaveAfter</method>
+                    </fermopoint_storepickup_observer>
+                </observers>
+            </sales_order_shipment_save_after>
             <sales_order_invoice_pay>
                 <observers>
                     <fermopoint_storepickup_observer>
@@ -187,6 +205,7 @@
                 <active>0</active>
                 <model>fpstorepickup/carrier_storepickup</model>
                 <title>Corriere con Consegna presso Fermo!Point</title>
+                <auto_ship>1</auto_ship>
                 <sandbox>1</sandbox>
                 <debug>1</debug>
                 <cost>0</cost>

@@ -18,6 +18,12 @@ class FermoPoint_StorePickup_Helper_Config extends Mage_Core_Helper_Abstract
     const XML_PATH_GMAPSKEY = 'carriers/fpstorepickup/gmaps_key';
     const XML_PATH_ALLOWSPECIFIC = 'carriers/fpstorepickup/allowspecific_payment';
     const XML_PATH_SPECIFICPAYMENTS = 'carriers/fpstorepickup/specificpayment';
+    const XML_PATH_AUTOSHIP = 'carriers/fpstorepickup/auto_ship';
+    
+    public function getAutoShip()
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_AUTOSHIP);
+    }
     
     public function getTosAccepted()
     {

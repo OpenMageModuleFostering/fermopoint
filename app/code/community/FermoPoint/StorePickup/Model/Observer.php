@@ -164,6 +164,9 @@ class FermoPoint_StorePickup_Model_Observer
     
     public function onOrderInvoicePay($event)
     {
+        if ( ! Mage::helper('fpstorepickup/config')->getAutoShip())
+            return;
+        
         $invoice = $event->getInvoice();
         $order = $invoice->getOrder();
         
@@ -213,6 +216,57 @@ class FermoPoint_StorePickup_Model_Observer
         } catch (Mage_Core_Exception $e) {
             Mage::logException($e);
         }
+    }
+    
+    public function onShipmentSaveBefore($event)
+    {
+        if (Mage::helper('fpstorepickup/config')->getAutoShip())
+            return;
+        
+        $shipment = $event->getShipment();
+        $order = $shipment->getOrder();
+        
+        $orderId = $order->getId();
+        $orderPoint = Mage::getModel('fpstorepickup/order_point')->load($orderId, 'order_id');
+        if ( ! $orderPoint->getId() || $orderPoint->getIsApproved() || ! $orderPoint->getTicketId())
+            return;
+        
+        $ticketId = $orderPoint->getTicketId();
+        try {
+            Mage::getSingleton('fpstorepickup/api')->approveOrderByTicketId($ticketId);
+        } catch (FermoPoint_StorePickup_Exception $e) {
+            Mage::logException($e);
+            throw $e;
+        }
+            
+        $orderPoint
+            ->setIsApproved(true)
+            ->save()
+        ;
+    }
+    
+    public function onShipmentSaveAfter($event)
+    {
+        if (Mage::helper('fpstorepickup/config')->getAutoShip())
+            return;
+        
+        $shipment = $event->getShipment();
+        $order = $shipment->getOrder();
+        
+        $orderId = $order->getId();
+        $orderPoint = Mage::getModel('fpstorepickup/order_point')->load($orderId, 'order_id');
+        if ( ! $orderPoint->getId() || ! $orderPoint->getTicketId())
+            return;
+        
+        $ticketId = $orderPoint->getTicketId();
+        $track = Mage::getModel('sales/order_shipment_track')
+             ->setShipment($shipment)
+             ->setData('title', Mage::helper('fpstorepickup')->__('Fermo!Point'))
+             ->setData('number', $ticketId)
+             ->setData('carrier_code', 'fpstorepickup')
+             ->setData('order_id', $shipment->getData('order_id'))
+         ;
+         $track->save();
     }
     
     public function onOrderCancel($event)
