@@ -18,7 +18,34 @@ class FermoPoint_StorePickup_Model_Observer
         $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         $controller->setFlag('', Mage_Core_Controller_Varien_Action::FLAG_NO_DISPATCH, true);
     }
-    
+
+
+    protected function _returnAmcheckoutError($controller, $message)
+    {
+
+        $amResponse = Mage::getModel("amscheckout/response");
+
+        $messagesBlock = Mage::app()->getLayout()->getMessagesBlock();
+
+        if ($amResponse->getErrorsCount() != 0) {
+            foreach($amResponse->getErrors() as $error)
+                $messagesBlock->addError($error);
+        }
+
+        $messagesBlock->addError($message);
+        $amResponse->setError($message);
+
+            $result = array(
+                "status" => "error",
+                "errorsHtml" => $messagesBlock->toHtml(),
+                "errors" => implode("\n", $amResponse->getErrors())
+            );
+
+
+        $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        $controller->setFlag('', Mage_Core_Controller_Varien_Action::FLAG_NO_DISPATCH, true);
+    }
+
     protected function _returnFirecheckoutError($controller, $message)
     {
         $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode(array(
@@ -38,6 +65,12 @@ class FermoPoint_StorePickup_Model_Observer
     {
         $controller = $observer->getEvent()->getControllerAction();
         $this->_onSaveShippingMethodBefore($controller, array($this, '_returnError'));
+    }
+
+    public function onAmcheckoutSaveOrderBefore($observer)
+    {
+        $controller = $observer->getEvent()->getControllerAction();
+        $this->_onSaveShippingMethodBefore($controller, array($this, '_returnAmcheckoutError'));
     }
     
     public function onIdevcheckoutSaveOrderBefore($observer)
@@ -135,9 +168,9 @@ class FermoPoint_StorePickup_Model_Observer
             return call_user_func($callback, $controller, Mage::helper('fpstorepickup')->__('Invalid phone number'));
         */
     }
-	
-	public function onSaveShippingMethodAfter($event)
-	{
+    
+    public function onSaveShippingMethodAfter($event)
+    {
         $quote = $event->getQuote();
         if ($quote->getShippingAddress()->getShippingMethod() !== 'fpstorepickup_fpstorepickup')
         {
@@ -167,11 +200,11 @@ class FermoPoint_StorePickup_Model_Observer
             
             $quote->collectTotals()->save();
         }
-	}	
-	
-	public function onSaveOrderAfter($event)
-	{
-		$order = $event->getOrder();
+    }   
+    
+    public function onSaveOrderAfter($event)
+    {
+        $order = $event->getOrder();
         $orderPoint = Mage::getModel('fpstorepickup/order_point')->load($order->getId(), 'order_id');
         if ($orderPoint->getId())
             return;
@@ -206,7 +239,7 @@ class FermoPoint_StorePickup_Model_Observer
         }
         
         Mage::helper('fpstorepickup')->setUseMethod(false);
-	}
+    }
     
     protected function _insertRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
     {
@@ -235,6 +268,41 @@ class FermoPoint_StorePickup_Model_Observer
             $html
         );
         $html .= $block->getLayout()->createBlock('fpstorepickup/fireCheckout_billing_js')->toHtml();
+        $transport->setHtml($html);
+    }
+
+    protected function _insertAmcheckoutValidator(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+
+        $html = $transport->getHtml();
+
+        if ( ! preg_match('#(amscheckoutForm.validator.validate.+?\))\s*\)\{#ius', $html, $matches))
+            return;
+
+        $html = str_replace(
+            $matches[1], 
+            '(' . $matches[1] . ' && fpStorePickup.validateShippingMethod())', 
+            $html
+        );
+            
+        $transport->setHtml($html);
+    }
+
+    protected function _insertAmcheckoutRadioJs(Mage_Core_Block_Abstract $block, Varien_Object $transport)
+    {
+
+        $html = $transport->getHtml();
+
+        if ( ! preg_match('#(<ul>.+?use_for_shipping.+?)</ul>#ius', $html, $matches))
+            return;
+
+        $html = str_replace(
+            $matches[1], 
+            $matches[1] . $block->getLayout()->createBlock('fpstorepickup/amCheckout_billing_radio')->toHtml(), 
+            $html
+        );
+            
+        $html .= $block->getLayout()->createBlock('fpstorepickup/amCheckout_billing_js')->toHtml();
         $transport->setHtml($html);
     }
     
@@ -315,15 +383,24 @@ class FermoPoint_StorePickup_Model_Observer
             || ! Mage::getStoreConfig('carriers/fpstorepickup/accept')
         )
             return;
-    
+
         $block = $event->getBlock();
         if ( ! $block)
             return;
-            
+
         switch ($block->getType())
         {
+            case 'checkout/onepage':
+                if (Mage::app()->getRequest()->getControllerModule()=="Amasty_Scheckout_Rewrite") {
+                    $this->_insertAmcheckoutValidator($block, $event->getTransport());
+                }
+                break;
             case 'checkout/onepage_billing':
-                $this->_insertRadioJs($block, $event->getTransport());
+                if (Mage::app()->getRequest()->getControllerModule()=="Amasty_Scheckout_Rewrite") {
+                    $this->_insertAmcheckoutRadioJs($block, $event->getTransport());
+                } else {
+                    $this->_insertRadioJs($block, $event->getTransport());
+                }
                 break;
             case 'firecheckout/checkout_shipping':
                 $this->_insertFirecheckoutRadioJs($block, $event->getTransport());

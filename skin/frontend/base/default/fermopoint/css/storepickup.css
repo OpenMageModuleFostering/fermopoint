@@ -104,3 +104,5 @@
 .onestepcheckout-index-index .address-information .shipping_other_address + .shipping_other_address {margin-top: 0;}
 
 .onestepcheckout-index-index #fermopoint_point label {max-width: 90%; float:left;}
+
+.amscheckout-row label[for="billing:use_for_shipping_point"] { max-width: 85%; }
