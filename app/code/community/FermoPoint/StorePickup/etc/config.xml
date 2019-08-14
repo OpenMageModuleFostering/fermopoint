@@ -2,7 +2,7 @@
 <config>
     <modules>
         <FermoPoint_StorePickup>
-            <version>1.3.0</version>
+            <version>1.3.2</version>
         </FermoPoint_StorePickup>
     </modules>
     <global>
@@ -38,6 +38,11 @@
             <fpstorepickup>
                 <class>FermoPoint_StorePickup_Helper</class>
             </fpstorepickup>
+            <firecheckout>
+                <rewrite>
+                    <ajax>FermoPoint_StorePickup_Helper_Firecheckout_Ajax</ajax>
+                </rewrite>
+            </firecheckout>
         </helpers>
         <resources>
             <fpstorepickup_setup>
@@ -224,6 +229,14 @@
             </admin_system_config_section_save_after>
         </events>
     </adminhtml>
+    <crontab>
+        <jobs>
+            <prefetch_fp_points>
+                <schedule><cron_expr>0 * * * *</cron_expr></schedule>
+                <run><model>fpstorepickup/observer::fetchPoints</model></run>
+            </prefetch_fp_points>
+        </jobs>
+    </crontab>
     <default>
         <carriers>
             <fpstorepickup>

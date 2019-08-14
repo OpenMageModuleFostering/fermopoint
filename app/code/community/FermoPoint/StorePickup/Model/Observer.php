@@ -414,5 +414,16 @@ class FermoPoint_StorePickup_Model_Observer
         $session->addError(Mage::helper('fpstorepickup')->__('Nickname and date of birth do not match!'));
         $config->resetGuestEnabled();
     }
+    
+    public function fetchPoints()
+    {
+        $request = Mage::getModel('fpstorepickup/api_searchData');
+        $request->loadFromPost(array(
+            'latitude' => 41.9000, 
+            'longitude' => 12.4833, 
+            'radius' => 5000,
+        ));
+        Mage::getSingleton('fpstorepickup/points')->getPoints($request, true);
+    }
 
 }

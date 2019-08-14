@@ -4,7 +4,7 @@ class FermoPoint_StorePickup_Model_Points {
 
     const CACHE_TAG = 'fermopoint_points';
     const CACHE_KEY = 'fermopoint_points_%s';
-    const CACHE_LIFETIME = 3600; // 1 hour
+    const CACHE_LIFETIME = 3900; // 1 hour + 5 minutes to overlap cronjob
     
     protected function _storePoint($data)
     {
@@ -32,13 +32,13 @@ class FermoPoint_StorePickup_Model_Points {
         return $point;
     }
     
-    public function getPoints(FermoPoint_StorePickup_Model_Api_SearchData $request)
+    public function getPoints(FermoPoint_StorePickup_Model_Api_SearchData $request, $bypassCache = false)
     {
         $needles = $request->toApi();
         $cacheKey = sprintf(self::CACHE_KEY, sha1(implode(',', $needles)));
         $cache = Mage::app()->getCache();
         $value = unserialize($cache->load($cacheKey));
-        if ( ! is_array($value) || ! $request->compare($value))
+        if ($bypassCache || ! is_array($value) || ! $request->compare($value))
         {
             $points = Mage::getSingleton('fpstorepickup/api')->getPoints($needles);
             $value = $needles;

@@ -28,10 +28,10 @@ class FermoPoint_StorePickup_Model_Carrier_Storepickup
         if ($request->getDestCountryId() !== 'IT')
             return false;
             
-        if ($request->getPackageWeight() > $this->getConfigData('maximum_weight'))
+        if ($this->getConfigData('maximum_weight') && ($request->getPackageWeight() > $this->getConfigData('maximum_weight')))
             return false;
             
-        if ($request->getBaseSubtotalInclTax() > $this->getConfigData('maximum_subtotal'))
+        if ($this->getConfigData('maximum_subtotal') && ($request->getBaseSubtotalInclTax() > $this->getConfigData('maximum_subtotal')))
             return false;
             
         $api = Mage::getSingleton('fpstorepickup/api');
