@@ -56,4 +56,5 @@ All Orders,Tutte le Transazioni
 "Delivery as HOST of %s. You will use the service without any registration.","Prenota la consegna come ospite di %s. Utilizzerai il servizio senza doverti registrare."
 "There is no user with given nickname and date of birth","La coppia nickname / data di nascita non sembra essere corretta"
 "Enter your birth date %s","Inserisci la tua data di nascita %s"
+"Enter your birth date mm/dd/yyyy","Inserisci la tua data di nascita gg/mm/aaaa"
 "Invalid Date of Birth","Invalid data di nascita"
