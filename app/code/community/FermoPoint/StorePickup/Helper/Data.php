@@ -218,8 +218,6 @@ class FermoPoint_StorePickup_Helper_Data extends Mage_Core_Helper_Abstract
             case FermoPoint_StorePickup_Model_Source_Costmode::MODE_FLAT:
             default:
                 $result = $config->getCost();
-                
-                
         }
         return $result;
     }
